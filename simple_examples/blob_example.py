@@ -29,7 +29,8 @@ def generate_greedy_sched(nexp=1, nside=32, filters=['r']):
         bfs.append(bf.Zenith_shadow_mask_basis_function(nside=nside, shadow_minutes=60., max_alt=76.))
         bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=40.))
         bfs.append(bf.Clouded_out_basis_function())
-        weights = np.array([3.0, 0.3, 6., 3., 0., 0., 0.])
+        bfs.append(bf.Filter_loaded_basis_function(filternames=filtername))
+        weights = np.array([3.0, 0.3, 3., 3., 0., 0., 0., 0.])
         sv = surveys.Greedy_survey(bfs, weights, block_size=1, filtername=filtername,
                                    dither=True, nside=nside, ignore_obs='DD', nexp=nexp)
         greedy_surveys.append(sv)
@@ -39,16 +40,14 @@ def generate_greedy_sched(nexp=1, nside=32, filters=['r']):
     return survey_list
 
 
-def generate_blobs(nside=32, nexp=1):
+def generate_blobs(nside=32, nexp=1, filter1s=['u', 'g', 'r', 'i', 'z', 'y'],
+                   filter2s = [None, 'g', 'r', 'i', None, None]):
     target_map = standard_goals(nside=nside)
     norm_factor = calc_norm_factor(target_map)
 
     # List to hold all the surveys (for easy plotting later)
-    surveys = []
+    survey_list = []
 
-    # Set up observations to be taken in blocks
-    filter1s = ['u', 'g', 'r', 'i', 'z', 'y']
-    filter2s = [None, 'g', 'r', 'i', None, None]
     # Ideal time between taking pairs
     pair_time = 22.
     times_needed = [pair_time, pair_time*2]
@@ -88,12 +87,12 @@ def generate_blobs(nside=32, nexp=1):
             survey_name = 'blob, %s' % filtername
         else:
             survey_name = 'blob, %s%s' % (filtername, filtername2)
-        surveys.append(surveys.Blob_survey(bfs, weights, filtername1=filtername, filtername2=filtername2,
-                                           ideal_pair_time=pair_time, nside=nside,
-                                           survey_note=survey_name, ignore_obs='DD', dither=True,
-                                           nexp=nexp))
+        survey_list.append(surveys.Blob_survey(bfs, weights, filtername1=filtername, filtername2=filtername2,
+                                               ideal_pair_time=pair_time, nside=nside,
+                                               survey_note=survey_name, ignore_obs='DD', dither=True,
+                                               nexp=nexp))
 
-    return surveys
+    return survey_list
 
 
 def run_sched(surveys, survey_length=365.25, nside=32, fileroot='greedy_'):
@@ -110,7 +109,19 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='greedy_'):
 if __name__ == "__main__":
 
     nside = 32
+
+    # Try without doing pairs.
+    greedy_list = generate_greedy_sched(filters=['u', 'g', 'r', 'i', 'z', 'y'], nexp=1)
+    blob_list = generate_blobs(nexp=1, filter2s = [None, None, None, None, None, None])
+    survey_lol = [blob_list, greedy_list]
+    run_sched(survey_lol, nside=nside, fileroot='blob_1exp_no_pairs')
+
     greedy_list = generate_greedy_sched(filters=['u', 'g', 'r', 'i', 'z', 'y'], nexp=1)
     blob_list = generate_blobs(nexp=1)
     survey_lol = [blob_list, greedy_list]
     run_sched(survey_lol, nside=nside, fileroot='blob_1exp_')
+
+    greedy_list = generate_greedy_sched(filters=['u', 'g', 'r', 'i', 'z', 'y'], nexp=2)
+    blob_list = generate_blobs(nexp=2)
+    survey_lol = [blob_list, greedy_list]
+    run_sched(survey_lol, nside=nside, fileroot='blob_2exp_')

@@ -29,7 +29,8 @@ def generate_greedy_sched(nexp=1, nside=32, filters=['r']):
         bfs.append(bf.Zenith_shadow_mask_basis_function(nside=nside, shadow_minutes=60., max_alt=76.))
         bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=40.))
         bfs.append(bf.Clouded_out_basis_function())
-        weights = np.array([3.0, 0.3, 6., 3., 0., 0., 0.])
+        bfs.append(bf.Filter_loaded_basis_function(filternames=filtername))
+        weights = np.array([3.0, 0.3, 6., 3., 0., 0., 0., 0])
         sv = surveys.Greedy_survey(bfs, weights, block_size=1, filtername=filtername,
                                    dither=True, nside=nside, ignore_obs='DD', nexp=nexp)
         greedy_surveys.append(sv)
