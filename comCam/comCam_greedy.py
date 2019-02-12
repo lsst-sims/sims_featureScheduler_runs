@@ -40,11 +40,12 @@ def greedy_comcam(nexp=1, nside=256, filters=['g', 'r', 'i']):
         bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=40.))
         bfs.append(bf.Clouded_out_basis_function())
         bfs.append(bf.Filter_loaded_basis_function(filternames=filtername))
-        weights = np.array([0.3, 0.3, 0.2, 3., 0., 0., 0., 0])
+        weights = np.array([3.0, 0.3, 6., 3., 0., 0., 0., 0])
 
+        # XXX-Note, need a new detailer here!, have to have dither=False until that can get passed through
         sv = surveys.Greedy_survey(bfs, weights, block_size=1, filtername=filtername,
                                    dither=False, nside=nside, ignore_obs='DD', nexp=nexp,
-                                   camera='comcam')
+                                   camera='comcam', detailers=[])
         survey_list.append(sv)
 
     return survey_list
@@ -68,4 +69,4 @@ if __name__ == "__main__":
     nside = 256
     survey_length = 2.  # Days
     survey_lol = greedy_comcam(nexp=1, nside=nside)
-    run_sched(survey_lol, nside=nside, fileroot='comcam_greedy', n_visit_limit=200)
+    run_sched(survey_lol, nside=nside, fileroot='comcam_greedy', n_visit_limit=None)
