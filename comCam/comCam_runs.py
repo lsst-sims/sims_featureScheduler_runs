@@ -68,7 +68,7 @@ def blob_comcam(nexp=1, nside=256, filters=['g', 'r', 'i']):
     norm_factor = calc_norm_factor(target_map)
 
     survey_list = []
-
+    time_needed = 23.
     for filtername in filters:
         bfs = []
         bfs.append(bf.M5_diff_basis_function(filtername=filtername, nside=nside))
@@ -83,7 +83,9 @@ def blob_comcam(nexp=1, nside=256, filters=['g', 'r', 'i']):
         bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=40.))
         bfs.append(bf.Clouded_out_basis_function())
         bfs.append(bf.Filter_loaded_basis_function(filternames=filtername))
-        weights = np.array([3.0, 0.3, 6., 3., 0., 0., 0., 0])
+        bfs.append(bf.Time_to_twilight_basis_function(time_needed=time_needed))
+        bfs.append(bf.Not_twilight_basis_function())
+        weights = np.array([3.0, 0.3, 6., 3., 0., 0., 0., 0, 0, 0])
 
         # XXX-Note, need a new detailer here!, have to have dither=False until that can get passed through
         sv = surveys.Blob_survey(bfs, weights, filtername1=filtername, filtername2=None,
@@ -92,7 +94,6 @@ def blob_comcam(nexp=1, nside=256, filters=['g', 'r', 'i']):
         survey_list.append(sv)
 
     return survey_list
-
 
 
 def run_sched(surveys, survey_length=365.25, nside=32, fileroot='comcam_greedy',
