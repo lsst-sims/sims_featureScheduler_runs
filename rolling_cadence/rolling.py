@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import healpy as hp
+import lsst.sims.featureScheduler as fs
 from lsst.sims.featureScheduler.modelObservatory import Model_observatory
 from lsst.sims.featureScheduler.schedulers import Core_scheduler
 from lsst.sims.featureScheduler.utils import standard_goals, calc_norm_factor
@@ -22,8 +23,9 @@ def gen_greedy_surveys(nside, nexp=1, target_maps=None, mod_year=None, day_offse
     for filtername in filters:
         bfs = []
         bfs.append(bf.M5_diff_basis_function(filtername=filtername, nside=nside))
+        target_list = [tm[filtername] for tm in target_maps]
         bfs.append(bf.Target_map_modulo_basis_function(filtername=filtername,
-                                                       target_maps=target_maps,
+                                                       target_maps=target_list,
                                                        season_modulo=mod_year, day_offset=day_offset,
                                                        out_of_bounds_val=np.nan, nside=nside,
                                                        norm_factor=norm_factor,
@@ -64,15 +66,16 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, target_maps=None,
         bfs.append(bf.M5_diff_basis_function(filtername=filtername, nside=nside))
         if filtername2 is not None:
             bfs.append(bf.M5_diff_basis_function(filtername=filtername2, nside=nside))
+        target_list = [tm[filtername] for tm in target_maps]
         bfs.append(bf.Target_map_modulo_basis_function(filtername=filtername,
-                                                       target_maps=target_maps,
+                                                       target_maps=target_list,
                                                        season_modulo=mod_year, day_offset=day_offset,
                                                        out_of_bounds_val=np.nan, nside=nside,
                                                        norm_factor=norm_factor,
                                                        max_season=max_season))
         if filtername2 is not None:
             bfs.append(bf.Target_map_modulo_basis_function(filtername=filtername2,
-                                                           target_maps=target_maps,
+                                                           target_maps=target_list,
                                                            season_modulo=mod_year, day_offset=day_offset,
                                                            out_of_bounds_val=np.nan, nside=nside,
                                                            norm_factor=norm_factor,
@@ -118,27 +121,93 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_'):
                                                       delete_past=True, n_visit_limit=n_visit_limit)
 
 
+def slice_wfd_area(nslice, target_map, scale_down_factor=0.2):
+    """
+    Slice the WFD area into even dec bands
+    """
+    # Make it so things still sum to one.
+    scale_up_factor = nslice - scale_down_factor*(nslice-1)
+
+    wfd = target_map['r'] * 0
+    wfd_indices = np.where(target_map['r'] == 1)[0]
+    wfd[wfd_indices] = 1
+    wfd_accum = np.cumsum(wfd)
+    split_wfd_indices = np.floor(np.max(wfd_accum)/nslice*(np.arange(nslice)+1)).astype(int)
+    split_wfd_indices = split_wfd_indices.tolist()
+    split_wfd_indices = [0] + split_wfd_indices
+
+    all_scaled_down = {}
+    for filtername in target_map:
+        all_scaled_down[filtername] = target_map[filtername]+0
+        all_scaled_down[filtername][wfd_indices] *= scale_down_factor
+
+    scaled_maps = []
+    for i in range(len(split_wfd_indices)-1):
+        new_map = {}
+        indices = wfd_indices[split_wfd_indices[i]:split_wfd_indices[i+1]]
+        for filtername in all_scaled_down:
+            new_map[filtername] = all_scaled_down[filtername] + 0
+            new_map[filtername][indices] = target_map[filtername][indices]*scale_up_factor
+        scaled_maps.append(new_map)
+
+    return scaled_maps
+
+
 if __name__ == "__main__":
     nside = 32
     survey_length = 365.25*10  # Days
     nexp = 1
 
+    # let's make the 1/2 target maps
+    sg = standard_goals()
+    norm_factor = calc_norm_factor(sg)
 
+    splits = [2, 3, 5, 10]
+    # Simple Rolling
+    for mixed_pairs in [True, False]:
+        for mod_year in splits:
+            roll_maps = slice_wfd_area(mod_year, sg)
+            target_maps = roll_maps + [sg]
+            greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=None,
+                                        norm_factor=norm_factor, max_season=None)
+            ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+            blobs = generate_blobs(nside, mixed_pairs=mixed_pairs, nexp=1, target_maps=target_maps,
+                                   norm_factor=norm_factor, mod_year=mod_year, max_season=None, day_offset=None)
+            surveys = [ddfs, blobs, greedy]
+            if mixed_pairs:
+                tag = 'mixed_'
+            else:
+                tag = ''
+            fileroot = 'simple_roll_mod%i_' % mod_year
+            fileroot += tag
+            run_sched(surveys, survey_length=survey_length, fileroot=fileroot)
 
+    splits = [2, 3, 6]
+    # Complex Rolling
+    observatory = Model_observatory(nside=nside)
+    conditions = observatory.return_conditions()
 
-    for nexp in [1, 2]:
-        # Same filter for pairs
-        greedy = gen_greedy_surveys(nside, nexp=nexp)
-        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-        blobs = generate_blobs(nside, nexp=nexp)
-        surveys = [ddfs, blobs, greedy]
-        run_sched(surveys, survey_length=survey_length, fileroot='baseline_%iexp_pairsame_' % nexp)
+    # Mark position of the sun at the start of the survey.
+    sun_ra_0 = conditions.sunRA  # radians
+    offset = fs.utils.create_season_offset(nside, sun_ra_0)
+    max_season = 6
 
-        # mixed pairs.
-        greedy = gen_greedy_surveys(nside, nexp=nexp)
-        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-        blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
-        surveys = [ddfs, blobs, greedy]
-        run_sched(surveys, survey_length=survey_length, fileroot='baseline_%iexp_pairsmix_' % nexp)
+    for mixed_pairs in [True, False]:
+        for mod_year in splits:
+            roll_maps = slice_wfd_area(mod_year, sg)
+            target_maps = roll_maps + [sg]
+            greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=offset,
+                                        norm_factor=norm_factor, max_season=max_season)
+            ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+            blobs = generate_blobs(nside, mixed_pairs=False, nexp=1, target_maps=target_maps,
+                                   norm_factor=norm_factor, mod_year=mod_year, max_season=max_season, day_offset=offset)
+            surveys = [ddfs, blobs, greedy]
+            if mixed_pairs:
+                tag = 'mixed_'
+            else:
+                tag = ''
+            fileroot = 'roll_mod%i_' % mod_year
+            fileroot += tag
+            run_sched(surveys, survey_length=survey_length, fileroot=fileroot)
 
 
