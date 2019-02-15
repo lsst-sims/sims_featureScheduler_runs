@@ -45,7 +45,7 @@ def greedy_comcam(nexp=1, nside=256, filters=['g', 'r', 'i']):
         # XXX-Note, need a new detailer here!, have to have dither=False until that can get passed through
         sv = surveys.Greedy_survey(bfs, weights, block_size=1, filtername=filtername,
                                    dither=False, nside=nside, ignore_obs='DD', nexp=nexp,
-                                   camera='comcam', detailers=[])
+                                   camera='comcam', detailers=[fs.detailers.Comcam_90rot_detailer()])
         survey_list.append(sv)
 
     return survey_list
@@ -90,7 +90,7 @@ def blob_comcam(nexp=1, nside=256, filters=['g', 'r', 'i']):
         # XXX-Note, need a new detailer here!, have to have dither=False until that can get passed through
         sv = surveys.Blob_survey(bfs, weights, filtername1=filtername, filtername2=None,
                                  dither=False, nside=nside, ignore_obs='DD', nexp=nexp,
-                                 camera='comcam', detailers=[])
+                                 camera='comcam', detailers=[fs.detailers.Comcam_90rot_detailer()])
         survey_list.append(sv)
 
     return survey_list
