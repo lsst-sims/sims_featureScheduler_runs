@@ -11,3 +11,5 @@ We run them with visits consisting of 2x15s exposures or 1x30s exposure (all fil
 | baseline_1exp_pairsame_10yrs.db  | 78% |  2.63 |
 | baseline_2exp_pairsame_10yrs.db  | 72% | 2.43 |
 
+The coadded depths are very similar in all the filters. Implies that there is a ~1% penalty for taking pairs in different filters, and a ~6% penalty for taking 2 snaps rather than 1 snap.
+
