@@ -74,6 +74,7 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, target_maps=None,
                                                        norm_factor=norm_factor,
                                                        max_season=max_season))
         if filtername2 is not None:
+            target_list = [tm[filtername2] for tm in target_maps]
             bfs.append(bf.Target_map_modulo_basis_function(filtername=filtername2,
                                                            target_maps=target_list,
                                                            season_modulo=mod_year, day_offset=day_offset,
