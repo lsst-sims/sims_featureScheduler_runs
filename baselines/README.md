@@ -10,6 +10,8 @@ We run them with visits consisting of 2x15s exposures or 1x30s exposure (all fil
 | baseline_2exp_pairsmix_10yrs.db  | 71%  | 2.38 |
 | baseline_1exp_pairsame_10yrs.db  | 78% |  2.63 |
 | baseline_2exp_pairsame_10yrs.db  | 72% | 2.43 |
+| baseline_1exp_nopairs_10yrs.db | 81%| 2.72|
 
 The coadded depths are very similar in all the filters. Implies that there is a ~1% penalty for taking pairs in different filters, and a ~6% penalty for taking 2 snaps rather than 1 snap.
 
+If we turn pairs off completely, get a 3% increase in OSF. A fair number of the observations still get taken in pairs naturally. 

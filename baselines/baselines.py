@@ -130,22 +130,17 @@ if __name__ == "__main__":
     surveys = [ddfs, blobs, greedy]
     run_sched(surveys, survey_length=survey_length, fileroot='baseline_%iexp_nopairs_' % nexp)
 
-    # XXX-temp comment out
-    if False:
+    for nexp in [1, 2]:
+        # Same filter for pairs
+        greedy = gen_greedy_surveys(nside, nexp=nexp)
+        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+        blobs = generate_blobs(nside, nexp=nexp)
+        surveys = [ddfs, blobs, greedy]
+        run_sched(surveys, survey_length=survey_length, fileroot='baseline_%iexp_pairsame_' % nexp)
 
-        for nexp in [1, 2]:
-            # Same filter for pairs
-            greedy = gen_greedy_surveys(nside, nexp=nexp)
-            ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-            blobs = generate_blobs(nside, nexp=nexp)
-            surveys = [ddfs, blobs, greedy]
-            run_sched(surveys, survey_length=survey_length, fileroot='baseline_%iexp_pairsame_' % nexp)
-
-            # mixed pairs.
-            greedy = gen_greedy_surveys(nside, nexp=nexp)
-            ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-            blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
-            surveys = [ddfs, blobs, greedy]
-            run_sched(surveys, survey_length=survey_length, fileroot='baseline_%iexp_pairsmix_' % nexp)
-
-
+        # mixed pairs.
+        greedy = gen_greedy_surveys(nside, nexp=nexp)
+        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+        blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
+        surveys = [ddfs, blobs, greedy]
+        run_sched(surveys, survey_length=survey_length, fileroot='baseline_%iexp_pairsmix_' % nexp)

@@ -164,24 +164,26 @@ if __name__ == "__main__":
     norm_factor = calc_norm_factor(sg)
 
     splits = [2, 3, 5, 10]
-    # Simple Rolling
-    for mixed_pairs in [True, False]:
-        for mod_year in splits:
-            roll_maps = slice_wfd_area(mod_year, sg)
-            target_maps = roll_maps + [sg]
-            greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=None,
-                                        norm_factor=norm_factor, max_season=None)
-            ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-            blobs = generate_blobs(nside, mixed_pairs=mixed_pairs, nexp=1, target_maps=target_maps,
-                                   norm_factor=norm_factor, mod_year=mod_year, max_season=None, day_offset=None)
-            surveys = [ddfs, blobs, greedy]
-            if mixed_pairs:
-                tag = 'mixed_'
-            else:
-                tag = ''
-            fileroot = 'simple_roll_mod%i_' % mod_year
-            fileroot += tag
-            run_sched(surveys, survey_length=survey_length, fileroot=fileroot)
+    # XXX--temp, don't run simple
+    if False:
+        # Simple Rolling
+        for mixed_pairs in [True, False]:
+            for mod_year in splits:
+                roll_maps = slice_wfd_area(mod_year, sg)
+                target_maps = roll_maps + [sg]
+                greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=None,
+                                            norm_factor=norm_factor, max_season=None)
+                ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+                blobs = generate_blobs(nside, mixed_pairs=mixed_pairs, nexp=1, target_maps=target_maps,
+                                       norm_factor=norm_factor, mod_year=mod_year, max_season=None, day_offset=None)
+                surveys = [ddfs, blobs, greedy]
+                if mixed_pairs:
+                    tag = 'mixed_'
+                else:
+                    tag = ''
+                fileroot = 'simple_roll_mod%i_' % mod_year
+                fileroot += tag
+                run_sched(surveys, survey_length=survey_length, fileroot=fileroot)
 
     splits = [2, 3, 6]
     # Complex Rolling
@@ -193,14 +195,15 @@ if __name__ == "__main__":
     offset = fs.utils.create_season_offset(nside, sun_ra_0)
     max_season = 6
 
-    for mixed_pairs in [True, False]:
+    # XXX--temp just run mixed pairs
+    for mixed_pairs in [True]: #[True, False]:
         for mod_year in splits:
             roll_maps = slice_wfd_area(mod_year, sg)
             target_maps = roll_maps + [sg]
             greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=offset,
                                         norm_factor=norm_factor, max_season=max_season)
             ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-            blobs = generate_blobs(nside, mixed_pairs=False, nexp=1, target_maps=target_maps,
+            blobs = generate_blobs(nside, mixed_pairs=mixed_pairs, nexp=1, target_maps=target_maps,
                                    norm_factor=norm_factor, mod_year=mod_year, max_season=max_season, day_offset=offset)
             surveys = [ddfs, blobs, greedy]
             if mixed_pairs:
