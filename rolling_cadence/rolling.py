@@ -166,7 +166,7 @@ if __name__ == "__main__":
     splits = [2, 3, 5, 10]
 
     # Simple Rolling
-    for mixed_pairs in [True, False]:
+    for mixed_pairs in [True]:
         for mod_year in splits:
             roll_maps = slice_wfd_area(mod_year, sg)
             target_maps = roll_maps + [sg]
@@ -194,7 +194,7 @@ if __name__ == "__main__":
     offset = fs.utils.create_season_offset(nside, sun_ra_0)
     max_season = 6
 
-    for mixed_pairs in [True, False]:
+    for mixed_pairs in [True]:
         for mod_year in splits:
             roll_maps = slice_wfd_area(mod_year, sg)
             target_maps = roll_maps + [sg]
