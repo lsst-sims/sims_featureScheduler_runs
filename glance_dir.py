@@ -10,10 +10,11 @@ if __name__ == "__main__":
     """
     Run the glance batch on all .db files in a directory.
     """
-    db_files = glob.glob('*.db')
-    run_names = [name.replace('.db', '') for name in db_files]
+    
     if os.path.isfile('trackingDb_sqlite.db'):
         os.remove('trackingDb_sqlite.db')
+    db_files = glob.glob('*.db')
+    run_names = [name.replace('.db', '') for name in db_files]
     for name in run_names:
         if os.path.isdir(name):
             shutil.rmtree(name)
