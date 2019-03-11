@@ -1,0 +1,5 @@
+#!/bin/bash
+
+## copy things up to lsst_dev to make sharable
+
+rsync -avz --progress * lsst-dev.ncsa.illinois.edu:"/datasets/public_html/sim-data/sims_featureScheduler_runs/"
