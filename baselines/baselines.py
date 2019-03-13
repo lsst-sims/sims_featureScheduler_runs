@@ -123,28 +123,21 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--nexp", type=int, default=1, help="Number of exposures per visit")
-    parser.add_argument("--noPairs", type=bool, default=False)
+    parser.add_argument("--Pairs", type=bool, default=True)
     parser.add_argument("--mixedPairs", type=bool, default=True)
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
 
     args = parser.parse_args()
     nexp = args.nexp
-    noPairs = args.noPairs
+    Pairs = args.noPairs
     mixedPairs = args.mixedPairs
     survey_length = args.survey_length  # Days
     outDir = args.outDir
 
     nside = 32
 
-    if noPairs:
-        greedy = gen_greedy_surveys(nside, nexp=nexp)
-        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-        blobs = generate_blobs(nside, nexp=nexp, no_pairs=True)
-        surveys = [ddfs, blobs, greedy]
-        run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, 'baseline_%iexp_nopairs_' % nexp))
-
-    else:
+    if Pairs:
         if mixedPairs:
             # mixed pairs.
             greedy = gen_greedy_surveys(nside, nexp=nexp)
@@ -159,3 +152,9 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, 'baseline_%iexp_pairsame_' % nexp))
+    else:
+        greedy = gen_greedy_surveys(nside, nexp=nexp)
+        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+        blobs = generate_blobs(nside, nexp=nexp, no_pairs=True)
+        surveys = [ddfs, blobs, greedy]
+        run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, 'baseline_%iexp_nopairs_' % nexp))
