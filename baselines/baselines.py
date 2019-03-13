@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     nexp = args.nexp
-    Pairs = args.noPairs
+    Pairs = args.Pairs
     mixedPairs = args.mixedPairs
     survey_length = args.survey_length  # Days
     outDir = args.outDir
