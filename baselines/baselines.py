@@ -123,14 +123,18 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--nexp", type=int, default=1, help="Number of exposures per visit")
-    parser.add_argument("--Pairs", type=bool, default=True)
-    parser.add_argument("--mixedPairs", type=bool, default=True)
+    parser.add_argument("--Pairs", dest='pairs', action='store_true')
+    parser.add_argument("--noPairs", dest='pairs', action='store_false')
+    parser.set_defaults(pairs=True)
+    parser.add_argument("--mixedPairs", dest='mixedPairs', action='store_true')
+    parser.add_argument("--nomixedPairs", dest='mixedPairs', action='store_false')
+    parser.set_defaults(mixedPairs=True)
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
 
     args = parser.parse_args()
     nexp = args.nexp
-    Pairs = args.Pairs
+    Pairs = args.pairs
     mixedPairs = args.mixedPairs
     survey_length = args.survey_length  # Days
     outDir = args.outDir
