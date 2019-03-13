@@ -122,7 +122,7 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='fileroot'):
 
 if __name__ == "__main__":
     nside = 32
-    survey_length = 365.25*10  # Days
+    survey_length = 50 #365.25*10  # Days
 
     nexp = 1
 
