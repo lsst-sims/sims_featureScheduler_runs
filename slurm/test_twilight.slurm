@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## To run:  sbatch -p astro -A astro test_twilight.slurm
+
 ## Job Name
 
 #SBATCH --job-name=test_twilight
@@ -28,11 +30,11 @@
 
 ## See above section on "Specifying memory" for choices for --mem.
 
-#SBATCH --mem=20G
+#SBATCH --mem=100G
 
 ## Specify the working directory for this job
 
-#SBATCH --workdir=/gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/twilight
+#SBATCH --workdir=/gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/slurm
 
 ##turn on e-mail notification
 
