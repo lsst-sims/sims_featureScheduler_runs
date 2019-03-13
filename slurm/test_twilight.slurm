@@ -32,7 +32,7 @@
 
 ## Specify the working directory for this job
 
-#SBATCH --workdir=/gscratch/xyz/abc/myjobdir
+#SBATCH --workdir=/gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/twilight
 
 ##turn on e-mail notification
 
