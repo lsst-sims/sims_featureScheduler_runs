@@ -16,7 +16,7 @@
 
 #SBATCH --nodes=1   
 
-## Walltime (1 hours). Do not specify a walltime substantially more than your job needs.
+## Walltime (hours:min:sec) Do not specify a walltime substantially more than your job needs.
 
 #SBATCH --time=12:00:00
 

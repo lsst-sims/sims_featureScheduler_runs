@@ -70,3 +70,78 @@ def big_sky(nside=32):
             result[key][np.where(dec > wfd_north)] = 0.
 
     return result
+
+
+def newA(nside=32):
+    """
+    From https://github.com/rhiannonlynne/notebooks/blob/master/New%20Footprints.ipynb
+
+    XXX--this seems to have very strange u-band distributions
+    """
+
+    ra, dec = utils.ra_dec_hp_map(nside=nside)
+    coord = SkyCoord(ra=ra*u.rad, dec=dec*u.rad)
+    g_long, g_lat = coord.galactic.l.radian, coord.galactic.b.radian
+
+    # OK, let's just define the regions
+    north = np.where((dec > np.radians(2.25)) & (dec < np.radians(30.)))[0]
+    wfd = np.where(utils.WFD_healpixels(dec_min=-72.25, dec_max=2.25, nside=nside) > 0)[0]
+    nes = np.where(utils.NES_healpixels(dec_min=2.25, min_EB=-30., max_EB=10.) > 0)[0]
+    scp = np.where(utils.SCP_healpixels(nside=nside, dec_max=-72.25)> 0)[0]
+
+    new_gp = np.where((dec < np.radians(2.25)) & (dec > np.radians(-72.25)) & (np.abs(g_lat) < np.radians(15.)) &
+                      ((g_long < np.radians(90.)) | (g_long > np.radians(360.-70.))))[0]
+
+    anti_gp = np.where((dec < np.radians(2.25)) & (dec > np.radians(-72.25)) & (np.abs(g_lat) < np.radians(15.)) &
+                       (g_long < np.radians(360.-70.)) & (g_long > np.radians(90.)) )[0]
+
+    footprints = {'north': north, 'wfd': wfd, 'nes': nes, 'scp':scp, 'gp': new_gp, 'gp_anti': anti_gp}
+
+    filter_ratios = {'gp': {'g': 0.6672021557755091,
+                      'i': 0.6672021557755091,
+                      'r': 0.6672021557755091,
+                      'u': 0.6672021557755091,
+                      'y': 0.6672021557755091,
+                      'z': 0.6672021557755091},
+                     'gp_anti': {'g': 0.73392237135306,
+                      'i': 0.73392237135306,
+                      'r': 0.73392237135306,
+                      'u': 0.73392237135306,
+                      'y': 0.73392237135306,
+                      'z': 0.73392237135306},
+                     'nes': {'g': 0.2722184795564077,
+                      'i': 0.5444369591128154,
+                      'r': 0.5444369591128154,
+                      'u': 0.0,
+                      'y': 0.0,
+                      'z': 0.0},
+                     'north': {'g': 0.12276519666269368,
+                      'i': 0.12276519666269368,
+                      'r': 0.12276519666269368,
+                      'u': 0.12276519666269368,
+                      'y': 0.12276519666269368,
+                      'z': 0.12276519666269368},
+                     'scp': {'g': 0.17792057487346907,
+                      'i': 0.17792057487346907,
+                      'r': 0.17792057487346907,
+                      'u': 0.17792057487346907,
+                      'y': 0.17792057487346907,
+                      'z': 0.17792057487346907},
+                     'wfd': {'g': 0.43478260869565216,
+                      'i': 1.0,
+                      'r': 1.0,
+                      'u': 0.30434782608695654,
+                      'y': 0.8695652173913043,
+                      'z': 0.8695652173913043}}
+
+    results = {}
+    for filtername in filter_ratios['wfd']:
+        results[filtername] = ra*0
+        for region in footprints:
+            if np.max(filter_ratios[region][filtername]) > 0:
+                results[filtername][footprints[region]] = filter_ratios[region][filtername]
+
+    return results
+
+
+

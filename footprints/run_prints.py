@@ -9,6 +9,9 @@ from lsst.sims.featureScheduler.surveys import (generate_dd_surveys, Greedy_surv
                                                 Blob_survey)
 from lsst.sims.featureScheduler import sim_runner
 from footprints import *
+import argparse
+import os
+
 
 def gen_greedy_surveys(nside, nexp=1, target_map=None):
     """
