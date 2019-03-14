@@ -112,7 +112,7 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False, target_map=
     return surveys
 
 
-def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_'):
+def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -120,24 +120,38 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_'):
     observatory, scheduler, observations = sim_runner(observatory, scheduler,
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
-                                                      delete_past=True, n_visit_limit=n_visit_limit)
+                                                      delete_past=True, n_visit_limit=n_visit_limit,
+                                                      verbose=verbose)
 
 
 if __name__ == "__main__":
-    nside = 32
-    survey_length = 365.25*10  # Days
 
-    nexp = 1
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--nexp", type=int, default=1, help="Number of exposures per visit")
+    parser.add_argument("--verbose", dest='verbose', action='store_true')
+    parser.set_defaults(verbose=False)
+    parser.add_argument("--survey_length", type=float, default=365.25*10)
+    parser.add_argument("--outDir", type=str, default="")
+    parser.add_argument("--target_name", type=str, default="baseline")
+
+    args = parser.parse_args()
+    nexp = args.nexp
+    survey_length = args.survey_length  # Days
+    outDir = args.outDir
+    verbose = args.verbose
+    target_name = args.target_name
+
+    nside = 32
 
     target_maps = {}
     target_maps['big_sky'] = big_sky(nside=nside)
     target_maps['gp_heavy'] = gp_smooth(nside=nside)
     target_maps['baseline'] = standard_goals(nside=nside)
+    target_maps['big_sky_nouiy'] = big_sky_nouiy(nside=nside)
 
-    # mixed pairs.
-    for target_name in target_maps:
-        greedy = gen_greedy_surveys(nside, nexp=nexp, target_map=target_maps[target_name])
-        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-        blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True, target_map=target_maps[target_name])
-        surveys = [ddfs, blobs, greedy]
-        run_sched(surveys, survey_length=survey_length, fileroot=target_name)
+    greedy = gen_greedy_surveys(nside, nexp=nexp, target_map=target_maps[target_name])
+    ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+    blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True, target_map=target_maps[target_name])
+    surveys = [ddfs, blobs, greedy]
+    run_sched(surveys, survey_length=survey_length,
+              fileroot=os.path.join(outDir, target_name), verbose=verbose)

@@ -33,7 +33,9 @@ def gp_smooth(nside=32):
     return result
 
 
-def big_sky(nside=32):
+def big_sky(nside=32, weights={'u': [0.31, 0.15, False], 'g': [0.44, 0.15],
+                               'r': [1., 0.3], 'i': [1., 0.3], 'z': [0.9, 0.3],
+                               'y': [0.9, 0.3, False]}):
     """
     Based on the Olsen et al Cadence White Paper
     """
@@ -59,9 +61,6 @@ def big_sky(nside=32):
     # Now let's break it down by filter
     result = {}
 
-    # WFD weight, other weight, include North (default True)
-    weights = {'u': [0.31, 0.15, False], 'g': [0.44, 0.15], 'r': [1., 0.3], 'i': [1., 0.3], 'z': [0.9, 0.3], 'y': [0.9, 0.3, False]}
-
     for key in weights:
         result[key] = total_map + 0.
         result[key][np.where(result[key] == 1)] = weights[key][0]
@@ -69,6 +68,13 @@ def big_sky(nside=32):
         if len(weights[key]) == 3:
             result[key][np.where(dec > wfd_north)] = 0.
 
+    return result
+
+
+def big_sky_nouiy(nside=32, weights={'u': [0.31, 0., False], 'g': [0.44, 0.15],
+                                     'r': [1., 0.3], 'i': [1., 0.0, False], 'z': [0.9, 0.3],
+                                     'y': [0.9, 0.0, False]}):
+    result = big_sky(nside=nside, weights=weights)
     return result
 
 

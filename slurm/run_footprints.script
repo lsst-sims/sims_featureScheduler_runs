@@ -1,0 +1,4 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --survey_length 10 --target_name baseline --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --survey_length 10 --target_name big_sky --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --survey_length 10 --target_name gp_heavy --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --survey_length 10 --target_name big_sky_nouiy --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
