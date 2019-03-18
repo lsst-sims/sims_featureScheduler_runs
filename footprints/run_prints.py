@@ -143,11 +143,14 @@ if __name__ == "__main__":
 
     nside = 32
 
+    # Just load up all the potential footprints, then use the arg to grab the right one
     target_maps = {}
     target_maps['big_sky'] = big_sky(nside=nside)
     target_maps['gp_heavy'] = gp_smooth(nside=nside)
     target_maps['baseline'] = standard_goals(nside=nside)
     target_maps['big_sky_nouiy'] = big_sky_nouiy(nside=nside)
+    target_maps['newA'] = newA(nside=nside)
+    target_maps['newB'] = newB(nside=nside)
 
     greedy = gen_greedy_surveys(nside, nexp=nexp, target_map=target_maps[target_name])
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp)

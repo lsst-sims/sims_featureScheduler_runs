@@ -78,13 +78,7 @@ def big_sky_nouiy(nside=32, weights={'u': [0.31, 0., False], 'g': [0.44, 0.15],
     return result
 
 
-def newA(nside=32):
-    """
-    From https://github.com/rhiannonlynne/notebooks/blob/master/New%20Footprints.ipynb
-
-    XXX--this seems to have very strange u-band distributions
-    """
-
+def new_regions(nside=32):
     ra, dec = utils.ra_dec_hp_map(nside=nside)
     coord = SkyCoord(ra=ra*u.rad, dec=dec*u.rad)
     g_long, g_lat = coord.galactic.l.radian, coord.galactic.b.radian
@@ -93,59 +87,85 @@ def newA(nside=32):
     north = np.where((dec > np.radians(2.25)) & (dec < np.radians(30.)))[0]
     wfd = np.where(utils.WFD_healpixels(dec_min=-72.25, dec_max=2.25, nside=nside) > 0)[0]
     nes = np.where(utils.NES_healpixels(dec_min=2.25, min_EB=-30., max_EB=10.) > 0)[0]
-    scp = np.where(utils.SCP_healpixels(nside=nside, dec_max=-72.25)> 0)[0]
+    scp = np.where(utils.SCP_healpixels(nside=nside, dec_max=-72.25) > 0)[0]
 
     new_gp = np.where((dec < np.radians(2.25)) & (dec > np.radians(-72.25)) & (np.abs(g_lat) < np.radians(15.)) &
                       ((g_long < np.radians(90.)) | (g_long > np.radians(360.-70.))))[0]
 
     anti_gp = np.where((dec < np.radians(2.25)) & (dec > np.radians(-72.25)) & (np.abs(g_lat) < np.radians(15.)) &
-                       (g_long < np.radians(360.-70.)) & (g_long > np.radians(90.)) )[0]
+                       (g_long < np.radians(360.-70.)) & (g_long > np.radians(90.)))[0]
 
-    footprints = {'north': north, 'wfd': wfd, 'nes': nes, 'scp':scp, 'gp': new_gp, 'gp_anti': anti_gp}
+    footprints = {'north': north, 'wfd': wfd, 'nes': nes, 'scp': scp, 'gp': new_gp, 'gp_anti': anti_gp}
 
-    filter_ratios = {'gp': {'g': 0.6672021557755091,
-                      'i': 0.6672021557755091,
-                      'r': 0.6672021557755091,
-                      'u': 0.6672021557755091,
-                      'y': 0.6672021557755091,
-                      'z': 0.6672021557755091},
-                     'gp_anti': {'g': 0.73392237135306,
-                      'i': 0.73392237135306,
-                      'r': 0.73392237135306,
-                      'u': 0.73392237135306,
-                      'y': 0.73392237135306,
-                      'z': 0.73392237135306},
-                     'nes': {'g': 0.2722184795564077,
-                      'i': 0.5444369591128154,
-                      'r': 0.5444369591128154,
-                      'u': 0.0,
-                      'y': 0.0,
-                      'z': 0.0},
-                     'north': {'g': 0.12276519666269368,
-                      'i': 0.12276519666269368,
-                      'r': 0.12276519666269368,
-                      'u': 0.12276519666269368,
-                      'y': 0.12276519666269368,
-                      'z': 0.12276519666269368},
-                     'scp': {'g': 0.17792057487346907,
-                      'i': 0.17792057487346907,
-                      'r': 0.17792057487346907,
-                      'u': 0.17792057487346907,
-                      'y': 0.17792057487346907,
-                      'z': 0.17792057487346907},
-                     'wfd': {'g': 0.43478260869565216,
-                      'i': 1.0,
-                      'r': 1.0,
-                      'u': 0.30434782608695654,
-                      'y': 0.8695652173913043,
-                      'z': 0.8695652173913043}}
+    return footprints
+
+
+def newA(nside=32):
+    """
+    From https://github.com/rhiannonlynne/notebooks/blob/master/New%20Footprints.ipynb
+
+    XXX--this seems to have very strange u-band distributions
+    """
+    zeros = np.zeros(hp.nside2npix(nside), dtype=float)
+    footprints = new_regions()
+
+    # Define how many visits per field we want
+    obs_region = {'gp': 750, 'wfd': 839, 'nes': 255, 'scp': 200, 'gp_anti': 825, 'north': 138}
+
+    wfd_ratio = {'u': 0.06796116504854369, 'g': 0.0970873786407767,
+                 'r': 0.22330097087378642, 'i': 0.22330097087378642, 'z': 0.1941747572815534, 'y': 0.1941747572815534}
+    uniform_ratio = {'u': 0.16666666666666666, 'g': 0.16666666666666666,
+                     'r': 0.16666666666666666, 'i': 0.16666666666666666, 'z': 0.16666666666666666, 'y': 0.16666666666666666}
+
+    filter_ratios = {'gp': wfd_ratio,
+                     'gp_anti': wfd_ratio,
+                     'nes': {'u': 0.0, 'g': 0.2, 'r': 0.4, 'i': 0.4, 'z': 0.0, 'y': 0.0},
+                     'north': uniform_ratio,
+                     'scp': uniform_ratio,
+                     'wfd': wfd_ratio}
 
     results = {}
+    norm_val = obs_region['wfd']*filter_ratios['wfd']['r']
     for filtername in filter_ratios['wfd']:
-        results[filtername] = ra*0
+        results[filtername] = zeros + 0
         for region in footprints:
             if np.max(filter_ratios[region][filtername]) > 0:
-                results[filtername][footprints[region]] = filter_ratios[region][filtername]
+                results[filtername][footprints[region]] = filter_ratios[region][filtername]*obs_region[region]/norm_val
+
+    return results
+
+
+def newB(nside=32):
+    """
+    From https://github.com/rhiannonlynne/notebooks/blob/master/New%20Footprints.ipynb
+
+    XXX--this seems to have very strange u-band distributions
+    """
+    zeros = np.zeros(hp.nside2npix(nside), dtype=float)
+    footprints = new_regions()
+
+    # Define how many visits per field we want
+    obs_region = {'gp': 650, 'wfd': 830, 'nes': 255, 'scp': 200, 'gp_anti': 100, 'north': 207}
+
+    wfd_ratio = {'u': 0.06796116504854369, 'g': 0.0970873786407767,
+                 'r': 0.22330097087378642, 'i': 0.22330097087378642, 'z': 0.1941747572815534, 'y': 0.1941747572815534}
+    uniform_ratio = {'u': 0.16666666666666666, 'g': 0.16666666666666666,
+                     'r': 0.16666666666666666, 'i': 0.16666666666666666, 'z': 0.16666666666666666, 'y': 0.16666666666666666}
+
+    filter_ratios = {'gp': wfd_ratio,
+                     'gp_anti': wfd_ratio,
+                     'nes': {'u': 0.0, 'g': 0.2, 'r': 0.4, 'i': 0.4, 'z': 0.0, 'y': 0.0},
+                     'north': uniform_ratio,
+                     'scp': uniform_ratio,
+                     'wfd': wfd_ratio}
+
+    results = {}
+    norm_val = obs_region['wfd']*filter_ratios['wfd']['r']
+    for filtername in filter_ratios['wfd']:
+        results[filtername] = zeros + 0
+        for region in footprints:
+            if np.max(filter_ratios[region][filtername]) > 0:
+                results[filtername][footprints[region]] = filter_ratios[region][filtername]*obs_region[region]/norm_val
 
     return results
 
