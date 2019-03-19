@@ -49,5 +49,5 @@
 ## Set up the evironment
 source /gscratch/astro/yoachim/lsst/loadLSST.bash
 setup sims_featureScheduler -t $USER 
-cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/baseline
+cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/baselines
 python baselines.py --survey_length 10 
