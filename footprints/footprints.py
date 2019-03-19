@@ -78,21 +78,21 @@ def big_sky_nouiy(nside=32, weights={'u': [0.31, 0., False], 'g': [0.44, 0.15],
     return result
 
 
-def new_regions(nside=32):
+def new_regions(nside=32, north_limit=2.25):
     ra, dec = utils.ra_dec_hp_map(nside=nside)
     coord = SkyCoord(ra=ra*u.rad, dec=dec*u.rad)
     g_long, g_lat = coord.galactic.l.radian, coord.galactic.b.radian
 
     # OK, let's just define the regions
-    north = np.where((dec > np.radians(2.25)) & (dec < np.radians(30.)))[0]
-    wfd = np.where(utils.WFD_healpixels(dec_min=-72.25, dec_max=2.25, nside=nside) > 0)[0]
-    nes = np.where(utils.NES_healpixels(dec_min=2.25, min_EB=-30., max_EB=10.) > 0)[0]
+    north = np.where((dec > np.radians(north_limit)) & (dec < np.radians(30.)))[0]
+    wfd = np.where(utils.WFD_healpixels(dec_min=-72.25, dec_max=north_limit, nside=nside) > 0)[0]
+    nes = np.where(utils.NES_healpixels(dec_min=north_limit, min_EB=-30., max_EB=10.) > 0)[0]
     scp = np.where(utils.SCP_healpixels(nside=nside, dec_max=-72.25) > 0)[0]
 
-    new_gp = np.where((dec < np.radians(2.25)) & (dec > np.radians(-72.25)) & (np.abs(g_lat) < np.radians(15.)) &
+    new_gp = np.where((dec < np.radians(north_limit)) & (dec > np.radians(-72.25)) & (np.abs(g_lat) < np.radians(15.)) &
                       ((g_long < np.radians(90.)) | (g_long > np.radians(360.-70.))))[0]
 
-    anti_gp = np.where((dec < np.radians(2.25)) & (dec > np.radians(-72.25)) & (np.abs(g_lat) < np.radians(15.)) &
+    anti_gp = np.where((dec < np.radians(north_limit)) & (dec > np.radians(-72.25)) & (np.abs(g_lat) < np.radians(15.)) &
                        (g_long < np.radians(360.-70.)) & (g_long > np.radians(90.)))[0]
 
     footprints = {'north': north, 'wfd': wfd, 'nes': nes, 'scp': scp, 'gp': new_gp, 'gp_anti': anti_gp}
@@ -107,7 +107,7 @@ def newA(nside=32):
     XXX--this seems to have very strange u-band distributions
     """
     zeros = np.zeros(hp.nside2npix(nside), dtype=float)
-    footprints = new_regions()
+    footprints = new_regions(north_limit=2.25)
 
     # Define how many visits per field we want
     obs_region = {'gp': 750, 'wfd': 839, 'nes': 255, 'scp': 200, 'gp_anti': 825, 'north': 138}
@@ -142,7 +142,7 @@ def newB(nside=32):
     XXX--this seems to have very strange u-band distributions
     """
     zeros = np.zeros(hp.nside2npix(nside), dtype=float)
-    footprints = new_regions()
+    footprints = new_regions(north_limit=12.25)
 
     # Define how many visits per field we want
     obs_region = {'gp': 650, 'wfd': 830, 'nes': 255, 'scp': 200, 'gp_anti': 100, 'north': 207}
