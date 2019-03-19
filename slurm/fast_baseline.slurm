@@ -1,8 +1,10 @@
 #!/bin/bash
 
+## To run:  sbatch -p astro -A astro <filename.slurm>
+
 ## Job Name
 
-#SBATCH --job-name=footprints
+#SBATCH --job-name=fast_baseline
 
 ## Allocation Definition
 
@@ -16,9 +18,9 @@
 
 #SBATCH --nodes=1   
 
-## Walltime (hours:min:sec) Do not specify a walltime substantially more than your job needs.
+## Walltime (1 hours). Do not specify a walltime substantially more than your job needs.
 
-#SBATCH --time=12:00:00
+#SBATCH --time=1:00:00
 
 ## Memory per node. It is important to specify the memory since the default memory is very small.
 
@@ -47,10 +49,5 @@
 ## Set up the evironment
 source /gscratch/astro/yoachim/lsst/loadLSST.bash
 setup sims_featureScheduler -t $USER 
-
-cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/slurm
-
-## run all the baseline commands in parallel
-module load parallel-20170722
-## only need to do 5 at a time, since there are only that many in the list
-cat run_footprints.script | parallel -j 10
+cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/baseline
+python baselines.py --survey_length 10 
