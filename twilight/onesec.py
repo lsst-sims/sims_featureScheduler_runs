@@ -11,6 +11,8 @@ from lsst.sims.featureScheduler import sim_runner
 import sys
 import os
 import subprocess
+import argparse
+
 
 def gen_greedy_surveys(nside, nexp=1):
     """
@@ -124,10 +126,28 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='fileroot', extr
 
 
 if __name__ == "__main__":
-    nside = 32
-    survey_length = 365.25*10  # Days
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--nexp", type=int, default=1, help="Number of exposures per visit")
+    parser.add_argument("--Pairs", dest='pairs', action='store_true')
+    parser.add_argument("--noPairs", dest='pairs', action='store_false')
+    parser.set_defaults(pairs=True)
+    parser.add_argument("--mixedPairs", dest='mixedPairs', action='store_true')
+    parser.add_argument("--nomixedPairs", dest='mixedPairs', action='store_false')
+    parser.set_defaults(mixedPairs=True)
+    parser.add_argument("--verbose", dest='verbose', action='store_true')
+    parser.set_defaults(verbose=False)
+    parser.add_argument("--survey_length", type=float, default=365.25*10)
+    parser.add_argument("--outDir", type=str, default="")
 
-    nexp = 1
+    args = parser.parse_args()
+    nexp = args.nexp
+    Pairs = args.pairs
+    mixed_pairs = args.mixedPairs
+    survey_length = args.survey_length  # Days
+    outDir = args.outDir
+    verbose = args.verbose
+
+    nside = 32
 
     extra_info = {}
     exec_command = ''
@@ -137,11 +157,10 @@ if __name__ == "__main__":
     extra_info['git hash'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
     extra_info['file executed'] = os.path.realpath(__file__)
 
-
     greedy = gen_greedy_surveys(nside, nexp=nexp)
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-    blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
+    blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=mixed_pairs)
     surveys = [ddfs, blobs, greedy]
-    run_sched(surveys, survey_length=survey_length, fileroot='twilight_1s', extra_info=extra_info)
+    run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, 'twilight_1s'), extra_info=extra_info)
 
 

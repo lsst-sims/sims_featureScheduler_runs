@@ -218,7 +218,7 @@ if __name__ == "__main__":
             tag = ''
         fileroot = 'simple_roll_mod%i_' % mod_year
         fileroot += tag
-        run_sched(surveys, survey_length=survey_length, fileroot=fileroot, extra_info=extra_info)
+        run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info)
     else:
         #splits = [2, 3, 6]
         # Complex Rolling
@@ -244,4 +244,4 @@ if __name__ == "__main__":
             tag = ''
         fileroot = 'roll_mod%i_' % mod_year
         fileroot += tag
-        run_sched(surveys, survey_length=survey_length, fileroot=fileroot, extra_info=extra_info)
+        run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info)

@@ -156,7 +156,6 @@ if __name__ == "__main__":
     extra_info['exec command'] = exec_command
     extra_info['git hash'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
     extra_info['file executed'] = os.path.realpath(__file__)
-    
 
     if Pairs:
         if mixedPairs:
