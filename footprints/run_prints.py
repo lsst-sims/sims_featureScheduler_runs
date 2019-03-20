@@ -11,7 +11,8 @@ from lsst.sims.featureScheduler import sim_runner
 from footprints import *
 import argparse
 import os
-
+import subprocess
+import sys
 
 def gen_greedy_surveys(nside, nexp=1, target_map=None):
     """
@@ -112,7 +113,7 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False, target_map=
     return surveys
 
 
-def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False):
+def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False, extra_info=None):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -121,7 +122,7 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', ver
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
                                                       delete_past=True, n_visit_limit=n_visit_limit,
-                                                      verbose=verbose)
+                                                      verbose=verbose, extra_info=extra_info)
 
 
 if __name__ == "__main__":
@@ -143,6 +144,14 @@ if __name__ == "__main__":
 
     nside = 32
 
+    extra_info = {}
+    exec_command = ''
+    for arg in sys.argv:
+        exec_command += ' ' + arg
+    extra_info['exec command'] = exec_command
+    extra_info['git hash'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
+    extra_info['file executed'] = os.path.realpath(__file__)
+
     # Just load up all the potential footprints, then use the arg to grab the right one
     target_maps = {}
     target_maps['big_sky'] = big_sky(nside=nside)
@@ -157,4 +166,4 @@ if __name__ == "__main__":
     blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True, target_map=target_maps[target_name])
     surveys = [ddfs, blobs, greedy]
     run_sched(surveys, survey_length=survey_length,
-              fileroot=os.path.join(outDir, target_name), verbose=verbose)
+              fileroot=os.path.join(outDir, target_name), verbose=verbose, extra_info=extra_info)
