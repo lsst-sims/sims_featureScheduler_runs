@@ -8,7 +8,9 @@ import lsst.sims.featureScheduler.basis_functions as bf
 from lsst.sims.featureScheduler.surveys import (generate_dd_surveys, Greedy_survey,
                                                 Blob_survey)
 from lsst.sims.featureScheduler import sim_runner
-
+import sys
+import os
+import subprocess
 
 def gen_greedy_surveys(nside, nexp=1):
     """
@@ -109,7 +111,7 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1):
     return surveys
 
 
-def run_sched(surveys, survey_length=365.25, nside=32, fileroot='fileroot'):
+def run_sched(surveys, survey_length=365.25, nside=32, fileroot='fileroot', extra_info=None):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -117,19 +119,29 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='fileroot'):
     observatory, scheduler, observations = sim_runner(observatory, scheduler,
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
-                                                      delete_past=True, n_visit_limit=n_visit_limit)
+                                                      delete_past=True, n_visit_limit=n_visit_limit,
+                                                      extra_info=extra_info)
 
 
 if __name__ == "__main__":
     nside = 32
-    survey_length = 50 #365.25*10  # Days
+    survey_length = 365.25*10  # Days
 
     nexp = 1
+
+    extra_info = {}
+    exec_command = ''
+    for arg in sys.argv:
+        exec_command += ' ' + arg
+    extra_info['exec command'] = exec_command
+    extra_info['git hash'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
+    extra_info['file executed'] = os.path.realpath(__file__)
+
 
     greedy = gen_greedy_surveys(nside, nexp=nexp)
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
     blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
     surveys = [ddfs, blobs, greedy]
-    run_sched(surveys, survey_length=survey_length, fileroot='twilight_1s')
+    run_sched(surveys, survey_length=survey_length, fileroot='twilight_1s', extra_info=extra_info)
 
 

@@ -9,6 +9,10 @@ import lsst.sims.featureScheduler.basis_functions as bf
 from lsst.sims.featureScheduler.surveys import (generate_dd_surveys, Greedy_survey,
                                                 Blob_survey)
 from lsst.sims.featureScheduler import sim_runner
+import sys
+import subprocess
+import os
+import argparse
 
 
 def gen_greedy_surveys(nside, nexp=1, target_maps=None, mod_year=None, day_offset=None,
@@ -111,7 +115,7 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, target_maps=None,
     return surveys
 
 
-def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_'):
+def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', extra_info=None):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -119,7 +123,8 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_'):
     observatory, scheduler, observations = sim_runner(observatory, scheduler,
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
-                                                      delete_past=True, n_visit_limit=n_visit_limit)
+                                                      delete_past=True, n_visit_limit=n_visit_limit,
+                                                      extra_info=extra_info)
 
 
 def slice_wfd_area(nslice, target_map, scale_down_factor=0.2):
@@ -155,59 +160,88 @@ def slice_wfd_area(nslice, target_map, scale_down_factor=0.2):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--nexp", type=int, default=1, help="Number of exposures per visit")
+    parser.add_argument("--Pairs", dest='pairs', action='store_true')
+    parser.add_argument("--noPairs", dest='pairs', action='store_false')
+    parser.set_defaults(pairs=True)
+    parser.add_argument("--mixedPairs", dest='mixedPairs', action='store_true')
+    parser.add_argument("--nomixedPairs", dest='mixedPairs', action='store_false')
+    parser.set_defaults(mixedPairs=True)
+    parser.add_argument("--verbose", dest='verbose', action='store_true')
+    parser.set_defaults(verbose=False)
+    parser.add_argument("--survey_length", type=float, default=365.25*10)
+    parser.add_argument("--outDir", type=str, default="")
+    parser.add_argument("--simple", dest='simple', action='store_true')
+    parser.add_argument("--complex", dest='simple', action='store_false')
+    parser.add_argument("--splits", type=int, default=2)
+
+    args = parser.parse_args()
+    nexp = args.nexp
+    Pairs = args.pairs
+    mixed_pairs = args.mixedPairs
+    survey_length = args.survey_length  # Days
+    outDir = args.outDir
+    verbose = args.verbose
+    simple = args.simple
+    mod_year = args.splits
+
     nside = 32
-    survey_length = 365.25*10  # Days
-    nexp = 1
+
+    extra_info = {}
+    exec_command = ''
+    for arg in sys.argv:
+        exec_command += ' ' + arg
+    extra_info['exec command'] = exec_command
+    extra_info['git hash'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
+    extra_info['file executed'] = os.path.realpath(__file__)
 
     # let's make the 1/2 target maps
     sg = standard_goals()
     norm_factor = calc_norm_factor(sg)
 
-    splits = [2, 3, 5, 10]
+    #splits = [2, 3, 5, 10]
 
     # Simple Rolling
-    for mixed_pairs in [True]:
-        for mod_year in splits:
-            roll_maps = slice_wfd_area(mod_year, sg)
-            target_maps = roll_maps + [sg]
-            greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=None,
-                                        norm_factor=norm_factor, max_season=None)
-            ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-            blobs = generate_blobs(nside, mixed_pairs=mixed_pairs, nexp=1, target_maps=target_maps,
-                                   norm_factor=norm_factor, mod_year=mod_year, max_season=None, day_offset=None)
-            surveys = [ddfs, blobs, greedy]
-            if mixed_pairs:
-                tag = 'mixed_'
-            else:
-                tag = ''
-            fileroot = 'simple_roll_mod%i_' % mod_year
-            fileroot += tag
-            run_sched(surveys, survey_length=survey_length, fileroot=fileroot)
+    if simple:
+        roll_maps = slice_wfd_area(mod_year, sg)
+        target_maps = roll_maps + [sg]
+        greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=None,
+                                    norm_factor=norm_factor, max_season=None)
+        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+        blobs = generate_blobs(nside, mixed_pairs=mixed_pairs, nexp=1, target_maps=target_maps,
+                               norm_factor=norm_factor, mod_year=mod_year, max_season=None, day_offset=None)
+        surveys = [ddfs, blobs, greedy]
+        if mixed_pairs:
+            tag = 'mixed_'
+        else:
+            tag = ''
+        fileroot = 'simple_roll_mod%i_' % mod_year
+        fileroot += tag
+        run_sched(surveys, survey_length=survey_length, fileroot=fileroot, extra_info=extra_info)
+    else:
+        #splits = [2, 3, 6]
+        # Complex Rolling
+        observatory = Model_observatory(nside=nside)
+        conditions = observatory.return_conditions()
 
-    splits = [2, 3, 6]
-    # Complex Rolling
-    observatory = Model_observatory(nside=nside)
-    conditions = observatory.return_conditions()
+        # Mark position of the sun at the start of the survey.
+        sun_ra_0 = conditions.sunRA  # radians
+        offset = fs.utils.create_season_offset(nside, sun_ra_0)
+        max_season = 6
 
-    # Mark position of the sun at the start of the survey.
-    sun_ra_0 = conditions.sunRA  # radians
-    offset = fs.utils.create_season_offset(nside, sun_ra_0)
-    max_season = 6
-
-    for mixed_pairs in [True]:
-        for mod_year in splits:
-            roll_maps = slice_wfd_area(mod_year, sg)
-            target_maps = roll_maps + [sg]
-            greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=offset,
-                                        norm_factor=norm_factor, max_season=max_season)
-            ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-            blobs = generate_blobs(nside, mixed_pairs=mixed_pairs, nexp=1, target_maps=target_maps,
-                                   norm_factor=norm_factor, mod_year=mod_year, max_season=max_season, day_offset=offset)
-            surveys = [ddfs, blobs, greedy]
-            if mixed_pairs:
-                tag = 'mixed_'
-            else:
-                tag = ''
-            fileroot = 'roll_mod%i_' % mod_year
-            fileroot += tag
-            run_sched(surveys, survey_length=survey_length, fileroot=fileroot)
+        roll_maps = slice_wfd_area(mod_year, sg)
+        target_maps = roll_maps + [sg]
+        greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=offset,
+                                    norm_factor=norm_factor, max_season=max_season)
+        ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
+        blobs = generate_blobs(nside, mixed_pairs=mixed_pairs, nexp=1, target_maps=target_maps,
+                               norm_factor=norm_factor, mod_year=mod_year, max_season=max_season, day_offset=offset)
+        surveys = [ddfs, blobs, greedy]
+        if mixed_pairs:
+            tag = 'mixed_'
+        else:
+            tag = ''
+        fileroot = 'roll_mod%i_' % mod_year
+        fileroot += tag
+        run_sched(surveys, survey_length=survey_length, fileroot=fileroot, extra_info=extra_info)
