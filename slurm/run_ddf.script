@@ -1,0 +1,4 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/dither_ddf.py --survey_length 365 --perNight --maxDither 0.7 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/dither_ddf.py --survey_length 365 --perNight --maxDither 0.23 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/dither_ddf.py --survey_length 365 --perObs --maxDither 0.7 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/dither_ddf.py --survey_length 365 --perObs --maxDither 0.23 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
