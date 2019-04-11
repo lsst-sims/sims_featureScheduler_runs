@@ -1,0 +1,5 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 1.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 2.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 3.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 4.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 5.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen

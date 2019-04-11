@@ -14,7 +14,7 @@ import os
 import argparse
 
 
-def gen_greedy_surveys(nside, nexp=1):
+def gen_greedy_surveys(nside, nexp=1, template_weight=2):
     """
     Make a quick set of greedy surveys
     """
@@ -41,14 +41,14 @@ def gen_greedy_surveys(nside, nexp=1):
 
         bfs.append(bf.Filter_loaded_basis_function(filternames=filtername))
 
-        weights = np.array([3.0, 0.3, 3., 3., 2., 0., 0., 0., 0.])
+        weights = np.array([3.0, 0.3, 3., 3., template_weight, 0., 0., 0., 0.])
         surveys.append(Greedy_survey(bfs, weights, block_size=1, filtername=filtername,
                                      dither=True, nside=nside, ignore_obs='DD', nexp=nexp))
 
     return surveys
 
 
-def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False):
+def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False, template_weight=2):
     target_map = standard_goals(nside=nside)
     norm_factor = calc_norm_factor(target_map)
 
@@ -97,10 +97,10 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False):
             time_needed = times_needed[1]
         bfs.append(bf.Time_to_twilight_basis_function(time_needed=time_needed))
         bfs.append(bf.Not_twilight_basis_function())
-        weights = np.array([3.0, 3.0, .3, .3, 3., 3., 2., 0., 0., 0., 0., 0., 0.])
+        weights = np.array([3.0, 3.0, .3, .3, 3., 3., template_weight, 0., 0., 0., 0., 0., 0.])
         if filtername2 is None:
             # Need to scale weights up so filter balancing still works properly.
-            weights = np.array([6.0, 0.6, 3., 3., 2., 0., 0., 0., 0., 0., 0.])
+            weights = np.array([6.0, 0.6, 3., 3., template_weight, 0., 0., 0., 0., 0., 0.])
         if filtername2 is None:
             survey_name = 'blob, %s' % filtername
         else:
@@ -140,6 +140,7 @@ if __name__ == "__main__":
     parser.set_defaults(verbose=False)
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
+    parser.add_argument("--template_weight", type=float, default=2.)
 
     args = parser.parse_args()
     nexp = args.nexp
@@ -148,6 +149,7 @@ if __name__ == "__main__":
     survey_length = args.survey_length  # Days
     outDir = args.outDir
     verbose = args.verbose
+    template_weight = args.template_weight
 
     nside = 32
 
@@ -162,24 +164,24 @@ if __name__ == "__main__":
     if Pairs:
         if mixedPairs:
             # mixed pairs.
-            greedy = gen_greedy_surveys(nside, nexp=nexp)
+            greedy = gen_greedy_surveys(nside, nexp=nexp, template_weight=template_weight)
             ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-            blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
+            blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True, template_weight=template_weight)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'templates_%iexp_pairsmix_' % nexp), extra_info=extra_info)
+                      fileroot=os.path.join(outDir, 'templates_w_%.1f_%iexp_pairsmix_' % (template_weight, nexp)), extra_info=extra_info)
         else:
             # Same filter for pairs
-            greedy = gen_greedy_surveys(nside, nexp=nexp)
+            greedy = gen_greedy_surveys(nside, nexp=nexp, template_weight=template_weight)
             ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-            blobs = generate_blobs(nside, nexp=nexp)
+            blobs = generate_blobs(nside, nexp=nexp, template_weight=template_weight)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'templates_%iexp_pairsame_' % nexp), extra_info=extra_info)
+                      fileroot=os.path.join(outDir, 'templates_w_%.1f_%iexp_pairsame_' % (template_weight, nexp)), extra_info=extra_info)
     else:
-        greedy = gen_greedy_surveys(nside, nexp=nexp)
+        greedy = gen_greedy_surveys(nside, nexp=nexp, template_weight=template_weight)
         ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
-        blobs = generate_blobs(nside, nexp=nexp, no_pairs=True)
+        blobs = generate_blobs(nside, nexp=nexp, no_pairs=True, template_weight=template_weight)
         surveys = [ddfs, blobs, greedy]
         run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                  fileroot=os.path.join(outDir, 'templates_%iexp_nopairs_' % nexp), extra_info=extra_info)
+                  fileroot=os.path.join(outDir, 'templates_w_%.1f_%iexp_nopairs_' % (template_weight, nexp)), extra_info=extra_info)
