@@ -16,7 +16,8 @@ if __name__ == "__main__":
     for name in run_names:
         opsdb = db.OpsimDatabaseV4(name+'.db')
         colmap = batches.ColMapDict('OpsimV4')
-
+        if os.path.isdir('sci_' + name):
+            shutil.rmtree('sci_' + name)
         bdict = batches.scienceRadarBatch()
         resultsDb = db.ResultsDb(outDir='sci_' + name)
         group = mb.MetricBundleGroup(bdict, opsdb, outDir='sci_' + name, resultsDb=resultsDb)
