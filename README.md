@@ -22,6 +22,10 @@ alt_sched: Trying to drive specific cadence like alt-sched
 
 rotator: Scheduling the camera rotator angle
 
+template_obs:  Making sure the full sky is covered in all filters in all years. Important for image differencing templates and ubercal. 
+
+etc: Other random experiments, such as using azimuth distance rather than slewtime.
+
 
 ## Other runs of interest
 
@@ -35,5 +39,4 @@ stability_test:  Testing the stability of the scheduler to parameter settings an
 
 ToO: Target of opportunity simulation
 
-template_obs:  Making sure the full sky is covered in all filters in all years. For templates and ubercal. 
 
