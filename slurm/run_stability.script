@@ -1,0 +1,9 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset -10 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 10 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 30 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 180 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 365 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 1 --seed 43 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 1 --seed 44 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+
