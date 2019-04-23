@@ -3,11 +3,11 @@ import matplotlib.pylab as plt
 import healpy as hp
 from lsst.sims.featureScheduler.modelObservatory import Model_observatory
 from lsst.sims.featureScheduler.schedulers import Core_scheduler
-from lsst.sims.featureScheduler.utils import standard_goals, calc_norm_factor, _hpid2RaDec, _angularSeparation
+from lsst.sims.utils import _hpid2RaDec, _angularSeparation
+from lsst.sims.featureScheduler.utils import standard_goals, calc_norm_factor, TargetoO, Sim_targetoO
 import lsst.sims.featureScheduler.basis_functions as bf
 from lsst.sims.featureScheduler.surveys import (generate_dd_surveys, Greedy_survey,
                                                 Blob_survey, ToO_survey, ToO_master)
-from lsst.sims.featureScheduler.utils import TargetoO, Sim_targetoO
 from lsst.sims.featureScheduler import sim_runner
 import sys
 import subprocess
@@ -29,7 +29,7 @@ def gen_too_surveys(nside, nvis=3, nexp=1):
         bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=40.))
         bfs.append(bf.Clouded_out_basis_function())
         bfs.append(bf.Filter_loaded_basis_function(filternames=filtername))
-        weights = np.array([3.0, 0.3, 3., 3., 0., 0., 0., 0.])
+        weights = np.array([.1, 1., 0.1, 1., 0., 0., 0., 0.])
         example_survey = ToO_survey(bfs, weights, filtername1=filtername,
                                     dither=True, nside=nside, nexp=nexp)
         surveys.append(ToO_master(example_survey))
@@ -133,26 +133,26 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False):
     return surveys
 
 
-def generate_events_simple(nside=32, mjd0=59853.5, radius=25.):
+def generate_events_simple(nside=32, mjd0=59853.5, radius=15.):
     """
     Generate 3 simple ToO events
     """
-    ra, dec = _hpid2RaDec(np.arange(hp.nside2npix(nside)))
+    ra, dec = _hpid2RaDec(nside, np.arange(hp.nside2npix(nside)))
     radius = np.radians(radius)
 
     nights = [1, 3, 6]
     expires = 3
-    event_ra = np.radians([0, 90, 180])
-    event_dec = np.radians(-30.)
+    event_ra = np.radians([0, 10, 350])
+    event_dec = np.radians(-40.)
 
     events = []
     for i, nignt in enumerate(nights):
-        dist = _angularSeparation(ra, dec, event_ra[i], event_dec[i])
+        dist = _angularSeparation(ra, dec, event_ra[i], event_dec)
         good = np.where(dist <= radius)
         footprint = np.zeros(ra.size, dtype=float)
         footprint[good] = 1
         event = TargetoO(i, footprint, mjd0+nights[i]+expires)
-        events.append(Sim_targetoO(event, mjd0))
+        events.append(Sim_targetoO(event, mjd_start=mjd0+nights[i]))
     return events
 
 
