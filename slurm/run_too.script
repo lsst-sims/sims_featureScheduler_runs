@@ -1,0 +1,4 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO/targetoo.py --rate 1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO/targetoo.py --rate 10 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO/targetoo.py --rate 50 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO/targetoo.py --rate 100 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO

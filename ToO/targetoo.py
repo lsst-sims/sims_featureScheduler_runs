@@ -4,7 +4,7 @@ import healpy as hp
 from lsst.sims.featureScheduler.modelObservatory import Model_observatory
 from lsst.sims.featureScheduler.schedulers import Core_scheduler
 from lsst.sims.utils import _hpid2RaDec, _angularSeparation
-from lsst.sims.featureScheduler.utils import standard_goals, calc_norm_factor, TargetoO, Sim_targetoO
+from lsst.sims.featureScheduler.utils import standard_goals, calc_norm_factor, TargetoO, Sim_targetoO_server
 import lsst.sims.featureScheduler.basis_functions as bf
 from lsst.sims.featureScheduler.surveys import (generate_dd_surveys, Greedy_survey,
                                                 Blob_survey, ToO_survey, ToO_master)
@@ -153,8 +153,8 @@ def generate_events_simple(nside=32, mjd0=59853.5, radius=15.):
         good = np.where(dist <= radius)
         footprint = np.zeros(ra.size, dtype=float)
         footprint[good] = 1
-        event = TargetoO(i, footprint, mjd0+nights[i]+expires)
-        events.append(Sim_targetoO(event, mjd_start=mjd0+nights[i]))
+        events.append(TargetoO(i, footprint, mjd0+nights[i], expires))
+    events = Sim_targetoO_server(events)
     return events
 
 
@@ -188,8 +188,8 @@ def generate_events(nside=32, mjd0=59853.5, radius=15., survey_length=365.25*10,
         good = np.where(dist <= radius)
         footprint = np.zeros(ra.size, dtype=float)
         footprint[good] = 1
-        event = TargetoO(i, footprint, event_time+expires)
-        events.append(Sim_targetoO(event, mjd_start=event_time))
+        events.append(TargetoO(i, footprint, event_time, expires))
+    events = Sim_targetoO_server(events)
     return events, event_table
 
 
@@ -244,7 +244,7 @@ if __name__ == "__main__":
     extra_info['file executed'] = os.path.realpath(__file__)
 
     # Generate some simulated ToOs
-    simple_too = True
+    simple_too = False
     if simple_too:
         sim_ToOs = generate_events_simple(nside=nside)
         event_table = None
@@ -261,7 +261,7 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
             surveys = [toos, ddfs, blobs, greedy]
             run_sched(surveys, observatory, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'too_%iexp_pairsmix_' % nexp), extra_info=extra_info, event_table=event_table)
+                      fileroot=os.path.join(outDir, 'too_pairsmix_rate%i_' % too_rate), extra_info=extra_info, event_table=event_table)
         else:
             # Same filter for pairs
             toos = gen_too_surveys(nside=nside, nexp=nexp, nvis=nvis)
@@ -270,7 +270,7 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp)
             surveys = [toos, ddfs, blobs, greedy]
             run_sched(surveys, observatory, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'too%iexp_pairsame_' % nexp), extra_info=extra_info, event_table=event_table)
+                      fileroot=os.path.join(outDir, 'too_pairsame_rate%i_' % too_rate), extra_info=extra_info, event_table=event_table)
     else:
         toos = gen_too_surveys(nside=nside, nexp=nexp, nvis=nvis)
         greedy = gen_greedy_surveys(nside, nexp=nexp)
@@ -278,4 +278,4 @@ if __name__ == "__main__":
         blobs = generate_blobs(nside, nexp=nexp, no_pairs=True)
         surveys = [toos, ddfs, blobs, greedy]
         run_sched(surveys, observatory, survey_length=survey_length, verbose=verbose,
-                  fileroot=os.path.join(outDir, 'too_%iexp_nopairs_' % nexp), extra_info=extra_info, event_table=event_table)
+                  fileroot=os.path.join(outDir, 'too_nopairs_rate%i_' % too_rate), extra_info=extra_info, event_table=event_table)
