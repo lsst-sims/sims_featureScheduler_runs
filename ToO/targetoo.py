@@ -13,6 +13,8 @@ import sys
 import subprocess
 import os
 import argparse
+import sqlite3
+import pandas as pd
 
 
 def gen_too_surveys(nside, nvis=3, nexp=1):
@@ -156,8 +158,43 @@ def generate_events_simple(nside=32, mjd0=59853.5, radius=15.):
     return events
 
 
+def generate_events(nside=32, mjd0=59853.5, radius=15., survey_length=365.25*10,
+                    rate=10., expires=3., seed=42):
+    """
+    Parameters
+    ----------
+
+    """
+
+    np.random.seed(seed=seed)
+    ra, dec = _hpid2RaDec(nside, np.arange(hp.nside2npix(nside)))
+    radius = np.radians(radius)
+    # Use a ceil here so we get at least 1 event even if doing a short run.
+    n_events = np.int(np.ceil(survey_length/365.25*rate))
+    names = ['mjd_start', 'ra', 'dec', 'expires']
+    types = [float]*4
+    event_table = np.zeros(n_events, dtype=list(zip(names, types)))
+
+    event_table['mjd_start'] = np.random.random(n_events)*survey_length + mjd0
+    event_table['expires'] = event_table['mjd_start']+expires
+    # Make sure latitude points spread correctly
+    # http://mathworld.wolfram.com/SpherePointPicking.html
+    event_table['ra'] = np.random.rand(n_events)*np.pi*2
+    event_table['dec'] = np.arccos(2.*np.random.rand(n_events) - 1.) - np.pi/2.
+
+    events = []
+    for i, event_time in enumerate(event_table['mjd_start']):
+        dist = _angularSeparation(ra, dec, event_table['ra'][i], event_table['dec'][i])
+        good = np.where(dist <= radius)
+        footprint = np.zeros(ra.size, dtype=float)
+        footprint[good] = 1
+        event = TargetoO(i, footprint, event_time+expires)
+        events.append(Sim_targetoO(event, mjd_start=event_time))
+    return events, event_table
+
+
 def run_sched(surveys, observatory, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False,
-              extra_info=None):
+              extra_info=None, event_table=None):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -166,7 +203,7 @@ def run_sched(surveys, observatory, survey_length=365.25, nside=32, fileroot='ba
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
                                                       delete_past=True, n_visit_limit=n_visit_limit,
-                                                      verbose=verbose, extra_info=extra_info)
+                                                      verbose=verbose, extra_info=extra_info, event_table=event_table)
 
 
 if __name__ == "__main__":
@@ -183,6 +220,7 @@ if __name__ == "__main__":
     parser.set_defaults(verbose=False)
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
+    parser.add_argument("--too_rate", type=float, default=10)
 
     args = parser.parse_args()
     nexp = args.nexp
@@ -191,6 +229,7 @@ if __name__ == "__main__":
     survey_length = args.survey_length  # Days
     outDir = args.outDir
     verbose = args.verbose
+    too_rate = args.too_rate
 
     nside = 32
     # For ToO followup
@@ -205,7 +244,12 @@ if __name__ == "__main__":
     extra_info['file executed'] = os.path.realpath(__file__)
 
     # Generate some simulated ToOs
-    sim_ToOs = generate_events_simple(nside=nside)
+    simple_too = True
+    if simple_too:
+        sim_ToOs = generate_events_simple(nside=nside)
+        event_table = None
+    else:
+        sim_ToOs, event_table = generate_events(nside=nside, survey_length=survey_length, rate=too_rate)
     observatory = Model_observatory(nside=nside, sim_ToO=sim_ToOs)
 
     if Pairs:
@@ -217,7 +261,7 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
             surveys = [toos, ddfs, blobs, greedy]
             run_sched(surveys, observatory, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'too_%iexp_pairsmix_' % nexp), extra_info=extra_info)
+                      fileroot=os.path.join(outDir, 'too_%iexp_pairsmix_' % nexp), extra_info=extra_info, event_table=event_table)
         else:
             # Same filter for pairs
             toos = gen_too_surveys(nside=nside, nexp=nexp, nvis=nvis)
@@ -226,7 +270,7 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp)
             surveys = [toos, ddfs, blobs, greedy]
             run_sched(surveys, observatory, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'too%iexp_pairsame_' % nexp), extra_info=extra_info)
+                      fileroot=os.path.join(outDir, 'too%iexp_pairsame_' % nexp), extra_info=extra_info, event_table=event_table)
     else:
         toos = gen_too_surveys(nside=nside, nexp=nexp, nvis=nvis)
         greedy = gen_greedy_surveys(nside, nexp=nexp)
@@ -234,4 +278,4 @@ if __name__ == "__main__":
         blobs = generate_blobs(nside, nexp=nexp, no_pairs=True)
         surveys = [toos, ddfs, blobs, greedy]
         run_sched(surveys, observatory, survey_length=survey_length, verbose=verbose,
-                  fileroot=os.path.join(outDir, 'too_%iexp_nopairs_' % nexp), extra_info=extra_info)
+                  fileroot=os.path.join(outDir, 'too_%iexp_nopairs_' % nexp), extra_info=extra_info, event_table=event_table)
