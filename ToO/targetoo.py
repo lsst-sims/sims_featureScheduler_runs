@@ -175,7 +175,7 @@ def generate_events(nside=32, mjd0=59853.5, radius=15., survey_length=365.25*10,
     types = [float]*4
     event_table = np.zeros(n_events, dtype=list(zip(names, types)))
 
-    event_table['mjd_start'] = np.random.random(n_events)*survey_length + mjd0
+    event_table['mjd_start'] = np.sort(np.random.random(n_events))*survey_length + mjd0
     event_table['expires'] = event_table['mjd_start']+expires
     # Make sure latitude points spread correctly
     # http://mathworld.wolfram.com/SpherePointPicking.html
