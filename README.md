@@ -1,6 +1,7 @@
 # sims_featureScheduler_runs
 Collection of scheduler simulations
 
+Results sporadically uploaded to: https://lsst-web.ncsa.illinois.edu/sim-data/sims_featureScheduler_runs/
 
 
 ## Experiments with results
