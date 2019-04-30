@@ -25,6 +25,8 @@ simple_roll_mod3_mixed_10yrs.db
 
 ## Modified Rolling
 
+In the papers submitted for the Cadence White Papers, Raiteri et al (Blazars and Fast Radio Bursts with LSST), point out that the simple rolling procedure means much of the sky will not be observed with rolling on in a contnuous season. In these runs, we attempt to rectify this issue by having the area of emphasis "scroll-on" and off. 
+
 runs with 2, 3, and 6 dec bands. Versions with pairs in the same filter and pairs in different filters. These runs start with 1.5 years of no rolling, and end with 2.5 years of no rolling to ensure even WFD coverage. 
 
 Looking closely, there is a small discontinuity at the RA where the sun starts in the survey, this is the swap-point where rolling switches between regions, so somewhat expected. The alt,az plots also show a slight tendency to go to high airmass, especially in the south. Tuning basis function weights should help.
