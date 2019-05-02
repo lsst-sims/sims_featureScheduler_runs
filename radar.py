@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     bdict = {}
     bdict.update(batches.scienceRadarBatch(colmap, name))
-    resultsDb = db.ResultsDb(outDir=name)
+    resultsDb = db.ResultsDb(outDir=outDir)
     group = mb.MetricBundleGroup(bdict, opsdb, outDir=outDir, resultsDb=resultsDb)
     group.runAll()
     group.plotAll()
