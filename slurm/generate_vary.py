@@ -10,7 +10,6 @@ if __name__ == "__main__":
     fcws = [.1, 0.5, 1., 3., 10.]
 
     file = open("run_vary_params.script", "w")
-    file.write("!/bin/bash")
 
     root_path = '/gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/vary_weights'
 
