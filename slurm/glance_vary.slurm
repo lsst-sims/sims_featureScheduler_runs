@@ -49,7 +49,7 @@ source /gscratch/astro/yoachim/lsst/loadLSST.bash
 setup sims_featureScheduler -t $USER 
 setup sims_maf
 
-cd /Users/yoachim/gitRepos/sims_featureScheduler_runs/vary_weights
+cd /usr/lusers/yoachim/git_repos/sims_featureScheduler_runs/vary_weights
 
 ## run all the commands in parallel
 module load parallel-20170722
