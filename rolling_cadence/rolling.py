@@ -175,6 +175,7 @@ if __name__ == "__main__":
     parser.add_argument("--simple", dest='simple', action='store_true')
     parser.add_argument("--complex", dest='simple', action='store_false')
     parser.add_argument("--splits", type=int, default=2)
+    parser.add_argument("--scale_down_factor", type=float, default=0.2)
 
     args = parser.parse_args()
     nexp = args.nexp
@@ -185,6 +186,7 @@ if __name__ == "__main__":
     verbose = args.verbose
     simple = args.simple
     mod_year = args.splits
+    scale_down_factor = args.scale_down_factor
 
     nside = 32
 
@@ -204,7 +206,7 @@ if __name__ == "__main__":
 
     # Simple Rolling
     if simple:
-        roll_maps = slice_wfd_area(mod_year, sg)
+        roll_maps = slice_wfd_area(mod_year, sg, scale_down_factor=scale_down_factor)
         target_maps = roll_maps + [sg]
         greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=None,
                                     norm_factor=norm_factor, max_season=None)
@@ -216,7 +218,7 @@ if __name__ == "__main__":
             tag = 'mixed_'
         else:
             tag = ''
-        fileroot = 'simple_roll_mod%i_' % mod_year
+        fileroot = 'simple_roll_mod%i_sdf%.1f' % (mod_year, scale_down_factor)
         fileroot += tag
         run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info)
     else:
@@ -230,7 +232,7 @@ if __name__ == "__main__":
         offset = fs.utils.create_season_offset(nside, sun_ra_0)
         max_season = 6
 
-        roll_maps = slice_wfd_area(mod_year, sg)
+        roll_maps = slice_wfd_area(mod_year, sg, scale_down_factor=scale_down_factor)
         target_maps = roll_maps + [sg]
         greedy = gen_greedy_surveys(nside, nexp=nexp, target_maps=target_maps, mod_year=mod_year, day_offset=offset,
                                     norm_factor=norm_factor, max_season=max_season)
@@ -242,6 +244,6 @@ if __name__ == "__main__":
             tag = 'mixed_'
         else:
             tag = ''
-        fileroot = 'roll_mod%i_' % mod_year
+        fileroot = 'roll_mod%i_sdf%.1f' %  (mod_year, scale_down_factor)
         fileroot += tag
         run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info)
