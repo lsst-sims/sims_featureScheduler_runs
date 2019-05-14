@@ -19,3 +19,10 @@ A footprint suggested in the cadence white papers. Puts less epmhasis on the ent
 ## big_sky_nouiy10yrs.db 
 
 A more agressive version of the big sky footprint where u, i, and y are dropped from the galactic plane. One would not want to do this for calibration regions (the WFD can't be tied together!!), but gives a nice extreme example of packing more observations into the WFD area. Still not a very impressive increase in the number of galaxies in the WFD area.
+
+## bluer_footprint
+
+Turning up the number of g-band WFD observaions and turning down z and y.
+
+This results in lots of i-band being taken in twilght (this was already the case, but now even moreso). We migt consider only letting z and y in twilight?
+

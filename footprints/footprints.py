@@ -8,6 +8,36 @@ from astropy import units as u
 
 # OK, what are the footprints we'd like to try?
 
+def bluer_footprint(nside=32):
+    """Try a bluer filter dist. May want to turn this into a larger parameter search.
+    """
+
+    result = {}
+    result['u'] = generate_goal_map(nside=nside, NES_fraction=0.,
+                                    WFD_fraction=0.31, SCP_fraction=0.15,
+                                    GP_fraction=0.15, WFD_upper_edge_fraction=0.)
+    # Turn up the g WFD
+    result['g'] = generate_goal_map(nside=nside, NES_fraction=0.2,
+                                    WFD_fraction=0.9, SCP_fraction=0.15,
+                                    GP_fraction=0.15, WFD_upper_edge_fraction=0.)
+    result['r'] = generate_goal_map(nside=nside, NES_fraction=0.46,
+                                    WFD_fraction=1.0, SCP_fraction=0.15,
+                                    GP_fraction=0.15, WFD_upper_edge_fraction=0.)
+    result['i'] = generate_goal_map(nside=nside, NES_fraction=0.46,
+                                    WFD_fraction=1.0, SCP_fraction=0.15,
+                                    GP_fraction=0.15, WFD_upper_edge_fraction=0.)
+    # Turn down the z and y WFD
+    result['z'] = generate_goal_map(nside=nside, NES_fraction=0.4,
+                                    WFD_fraction=0.7, SCP_fraction=0.15,
+                                    GP_fraction=0.15, WFD_upper_edge_fraction=0.)
+    result['y'] = generate_goal_map(nside=nside, NES_fraction=0.,
+                                    WFD_fraction=0.7, SCP_fraction=0.15,
+                                    GP_fraction=0.15, WFD_upper_edge_fraction=0.)
+
+
+    return result
+
+
 def gp_smooth(nside=32):
     # Treat the galactic plane as just part of the WFD
     result = {}

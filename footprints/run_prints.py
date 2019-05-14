@@ -160,6 +160,7 @@ if __name__ == "__main__":
     target_maps['big_sky_nouiy'] = big_sky_nouiy(nside=nside)
     target_maps['newA'] = newA(nside=nside)
     target_maps['newB'] = newB(nside=nside)
+    target_maps['bluer_footprint'] = bluer_footprint(nside=nside)
 
     greedy = gen_greedy_surveys(nside, nexp=nexp, target_map=target_maps[target_name])
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
