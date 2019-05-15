@@ -115,7 +115,7 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, target_maps=None,
     return surveys
 
 
-def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', extra_info=None):
+def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', extra_info=None, verbose=False):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -124,7 +124,7 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', ext
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
                                                       delete_past=True, n_visit_limit=n_visit_limit,
-                                                      extra_info=extra_info)
+                                                      extra_info=extra_info, verbose=verbose)
 
 
 def slice_wfd_area(nslice, target_map, scale_down_factor=0.2):
@@ -220,7 +220,8 @@ if __name__ == "__main__":
             tag = ''
         fileroot = 'simple_roll_mod%i_sdf%.1f' % (mod_year, scale_down_factor)
         fileroot += tag
-        run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info)
+        run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info,
+                  verbose=verbose)
     else:
         #splits = [2, 3, 6]
         # Complex Rolling
@@ -246,4 +247,5 @@ if __name__ == "__main__":
             tag = ''
         fileroot = 'roll_mod%i_sdf%.1f' %  (mod_year, scale_down_factor)
         fileroot += tag
-        run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info)
+        run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info,
+                  verbose=verbose)
