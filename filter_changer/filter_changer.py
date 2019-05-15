@@ -112,12 +112,12 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False):
 
 
 def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False,
-              extra_info=None):
+              extra_info=None, illum_limit=60.):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
     observatory = Model_observatory(nside=nside)
-    filter_sched = simple_filter_sched(illum_limit=15.)
+    filter_sched = simple_filter_sched(illum_limit=illum_limit)
     observatory, scheduler, observations = sim_runner(observatory, scheduler,
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
@@ -140,6 +140,7 @@ if __name__ == "__main__":
     parser.set_defaults(verbose=False)
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
+    parser.add_argument("--illum_limit", type=float, default=60.)
 
     args = parser.parse_args()
     nexp = args.nexp
@@ -148,6 +149,7 @@ if __name__ == "__main__":
     survey_length = args.survey_length  # Days
     outDir = args.outDir
     verbose = args.verbose
+    illum_limit = args.illum_limit
 
     nside = 32
 
@@ -167,7 +169,8 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'fc%iexp_pairsmix_' % nexp), extra_info=extra_info)
+                      fileroot=os.path.join(outDir, 'fc%iexp_pairsmix_ilim%i_' % (nexp, illum_limit)), extra_info=extra_info,
+                      illum_limit=illum_limit)
         else:
             # Same filter for pairs
             greedy = gen_greedy_surveys(nside, nexp=nexp)
@@ -175,11 +178,13 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'fc%iexp_pairsame_' % nexp), extra_info=extra_info)
+                      fileroot=os.path.join(outDir, 'fc%iexp_pairsame_ilim%i_' % (nexp, illum_limit)), extra_info=extra_info,
+                      illum_limit=illum_limit)
     else:
         greedy = gen_greedy_surveys(nside, nexp=nexp)
         ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
         blobs = generate_blobs(nside, nexp=nexp, no_pairs=True)
         surveys = [ddfs, blobs, greedy]
         run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                  fileroot=os.path.join(outDir, 'fc%iexp_nopairs_' % nexp), extra_info=extra_info)
+                  fileroot=os.path.join(outDir, 'fc%iexp_nopairs_ilim%i_' % (nexp, illum_limit)), extra_info=extra_info,
+                  illum_limit=illum_limit)
