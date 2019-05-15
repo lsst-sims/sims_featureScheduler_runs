@@ -18,7 +18,7 @@
 
 ## Walltime (hours:min:sec) Do not specify a walltime substantially more than your job needs.
 
-#SBATCH --time=12:00:00
+#SBATCH --time=30:00:00
 
 ## Memory per node. It is important to specify the memory since the default memory is very small.
 
@@ -28,7 +28,7 @@
 
 ## See above section on "Specifying memory" for choices for --mem.
 
-#SBATCH --mem=100G
+#SBATCH --mem=248G
 
 ## Specify the working directory for this job
 
