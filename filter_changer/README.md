@@ -2,8 +2,13 @@
 A simple test to see what happens if we constrain the u filter to only be loaded withing ~2 days of new moon.
 
 
-## fc1exp_pairsmix_10yrs.db
 
-Seems to work and does constrian the u-band to only be taken around new moon. This sim gets median 233 r-band, 230 i-band, 72 u-band (with coadded depth of 25.77). In the baseline, we had 79 observations in u, and 25.83 depth. So it doesn't look like we can constrain the u band to be that close to new moon and still have enough time to reach the number of visits we had before.
+We constrain the u-band to be loaded when the moon is illuminated less than 15%, 30%, and 60% (same as baseline)
 
-XXX--update this with a table to show what squashing the u-band does
+|          |   15   |  30 | 60 |
+| u-number |  169614 |  176572.00  | 191470|
+| median depth |  25.76 |  25.78  |  25.83 |
+| total obs |  2607360.00 |  2608177.00 |   2609253.00  |
+
+Looks like swapping in the z-filter more leaves the u-band short. Since the median depth is changing, this is a problem for WFD, might also be limiting the number of DDF sequences in the u-band.
+
