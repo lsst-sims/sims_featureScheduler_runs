@@ -218,7 +218,7 @@ if __name__ == "__main__":
             tag = 'mixed_'
         else:
             tag = ''
-        fileroot = 'simple_roll_mod%i_sdf%.1f' % (mod_year, scale_down_factor)
+        fileroot = 'simple_roll_mod%i_sdf%.2f' % (mod_year, scale_down_factor)
         fileroot += tag
         run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info,
                   verbose=verbose)
@@ -245,7 +245,7 @@ if __name__ == "__main__":
             tag = 'mixed_'
         else:
             tag = ''
-        fileroot = 'roll_mod%i_sdf%.1f' %  (mod_year, scale_down_factor)
+        fileroot = 'roll_mod%i_sdf%.2f' %  (mod_year, scale_down_factor)
         fileroot += tag
         run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, fileroot), extra_info=extra_info,
                   verbose=verbose)
