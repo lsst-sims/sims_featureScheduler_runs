@@ -10,5 +10,5 @@ We constrain the u-band to be loaded when the moon is illuminated less than 15%,
 | median depth |  25.76 |  25.78  |  25.83 |
 | total obs |  2607360.00 |  2608177.00 |   2609253.00  |
 
-Looks like swapping in the z-filter more leaves the u-band short. Since the median depth is changing, this is a problem for WFD, might also be limiting the number of DDF sequences in the u-band.
+Looks like swapping in the z-filter more leaves the u-band short. Since the median depth is changing, this is a problem for WFD, might also be limiting the number of DDF sequences in the u-band. Probably need to configure DDFs to be able to execute every day.
 
