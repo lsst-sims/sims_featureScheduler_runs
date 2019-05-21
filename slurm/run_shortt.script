@@ -1,0 +1,4 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt/short_expt.py --nshort 2 --short_time 2 /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt/short_expt.py --nshort 2 --short_time 5 /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt/short_expt.py --nshort 5 --short_time 2 /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt/short_expt.py --nshort 2 --short_time 5 /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt
