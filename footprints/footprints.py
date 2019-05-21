@@ -4,6 +4,7 @@ import lsst.sims.featureScheduler.utils as utils
 from lsst.sims.featureScheduler.utils import generate_goal_map
 from astropy.coordinates import SkyCoord
 from astropy import units as u
+from lsst.sims.featureScheduler.utils import standard_goals, calc_norm_factor
 
 
 # OK, what are the footprints we'd like to try?
@@ -199,5 +200,46 @@ def newB(nside=32):
 
     return results
 
+
+def slice_wfd_area(nslice, target_map, scale_down_factor=0.2):
+    """
+    Slice the WFD area into even dec bands
+    """
+    # Make it so things still sum to one.
+    scale_up_factor = nslice - scale_down_factor*(nslice-1)
+
+    wfd = target_map['r'] * 0
+    wfd_indices = np.where(target_map['r'] == 1)[0]
+    wfd[wfd_indices] = 1
+    wfd_accum = np.cumsum(wfd)
+    split_wfd_indices = np.floor(np.max(wfd_accum)/nslice*(np.arange(nslice)+1)).astype(int)
+    split_wfd_indices = split_wfd_indices.tolist()
+    split_wfd_indices = [0] + split_wfd_indices
+
+    all_scaled_down = {}
+    for filtername in target_map:
+        all_scaled_down[filtername] = target_map[filtername]+0
+        all_scaled_down[filtername][wfd_indices] *= scale_down_factor
+
+    scaled_maps = []
+    for i in range(len(split_wfd_indices)-1):
+        new_map = {}
+        indices = wfd_indices[split_wfd_indices[i]:split_wfd_indices[i+1]]
+        for filtername in all_scaled_down:
+            new_map[filtername] = all_scaled_down[filtername] + 0
+            new_map[filtername][indices] = target_map[filtername][indices]*scale_up_factor
+        scaled_maps.append(new_map)
+
+    return scaled_maps
+
+
+def stuck_rolling(nside=32, scale_down_factor=0.2):
+    """A bit of a trolling footprint. See what happens if we use a rolling footprint, but don't roll it. 
+    """
+    sg = standard_goals()
+    footprints = slice_wfd_area(2, sg, scale_down_factor=scale_down_factor)
+    # Only take the first set
+    footprints = footprints[0]
+    return footprints
 
 
