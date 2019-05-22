@@ -161,7 +161,7 @@ if __name__ == "__main__":
     target_maps['newA'] = newA(nside=nside)
     target_maps['newB'] = newB(nside=nside)
     target_maps['bluer_footprint'] = bluer_footprint(nside=nside)
-    target_maps['stuck_roll'] = stuck_rolling(nside=nside)
+    target_maps['stuck_rolling'] = stuck_rolling(nside=nside)
 
     greedy = gen_greedy_surveys(nside, nexp=nexp, target_map=target_maps[target_name])
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
