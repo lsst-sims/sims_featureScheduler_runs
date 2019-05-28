@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pylab as plt
 import healpy as hp
 from lsst.sims.featureScheduler.modelObservatory import Model_observatory
-from lsst.sims.featureScheduler.schedulers import Core_scheduler
+from lsst.sims.featureScheduler.schedulers import Core_scheduler, simple_filter_sched
 from lsst.sims.featureScheduler.utils import standard_goals, calc_norm_factor
 import lsst.sims.featureScheduler.basis_functions as bf
 from lsst.sims.featureScheduler.surveys import (generate_dd_surveys, Greedy_survey,
@@ -110,10 +110,10 @@ def generate_blobs(nside, mixed_pairs=True, nexp=1, no_pairs=False, rm5=False):
             time_needed = times_needed[1]
         bfs.append(bf.Time_to_twilight_basis_function(time_needed=time_needed))
         bfs.append(bf.Not_twilight_basis_function())
-        weights = np.array([3.0, 3.0, .3, .3, 3., 3., 3., 0., 0., 0., 0., 0., 0.])
+        weights = np.array([3.0, 3.0, .3, .3, 3., 0.3, 3., 0., 0., 0., 0., 0., 0.])
         if filtername2 is None:
             # Need to scale weights up so filter balancing still works properly.
-            weights = np.array([6.0, 0.6, 3., 3., 3., 0., 0., 0., 0., 0., 0.])
+            weights = np.array([6.0, 0.6, 3., 3., 0.3, 0., 0., 0., 0., 0., 0.])
         if filtername2 is None:
             survey_name = 'blob, %s' % filtername
         else:
@@ -127,16 +127,19 @@ def generate_blobs(nside, mixed_pairs=True, nexp=1, no_pairs=False, rm5=False):
 
 
 def run_sched(surveys, survey_length=365.25, nside=32, fileroot='baseline_', verbose=False,
-              extra_info=None):
+              extra_info=None, illum_limit=60.):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
     observatory = Model_observatory(nside=nside)
+    filter_sched = simple_filter_sched(illum_limit=illum_limit)
+
     observatory, scheduler, observations = sim_runner(observatory, scheduler,
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
                                                       delete_past=True, n_visit_limit=n_visit_limit,
-                                                      verbose=verbose, extra_info=extra_info)
+                                                      verbose=verbose, extra_info=extra_info,
+                                                      filter_scheduler=filter_sched)
 
 
 def altfootprint(dec_min=-68, dec_max=7, nside=32):
@@ -164,8 +167,9 @@ if __name__ == "__main__":
     parser.set_defaults(verbose=False)
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
-    parser.add_argument("--rm5", dest='rm5', action='store_true')
-    parser.set_defaults(rm5=False)
+    # Let's make the r-band m5 default
+    parser.set_defaults(rm5=True)
+    parser.add_argument("--illum_limit", type=float, default=60.)
 
     args = parser.parse_args()
     nexp = 1
@@ -173,6 +177,7 @@ if __name__ == "__main__":
     survey_length = args.survey_length  # Days
     outDir = args.outDir
     verbose = args.verbose
+    illum_limit = args.illum_limit
 
     nside = 32
 
@@ -193,4 +198,5 @@ if __name__ == "__main__":
     blobs = generate_blobs(nside, nexp=nexp, rm5=rm5)
     surveys = [ddfs, blobs, greedy]
     run_sched(surveys, survey_length=survey_length, verbose=verbose,
-              fileroot=os.path.join(outDir, 'very_alt'+extra_name), extra_info=extra_info)
+              fileroot=os.path.join(outDir, 'very_alt2'+extra_name+'illum%i_' % illum_limit), extra_info=extra_info,
+              illum_limit=illum_limit)

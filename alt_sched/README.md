@@ -11,3 +11,17 @@ Rather than observe nightly based on azimuth cuts, we divide the survey in decli
 
 If this looks promising, we can explore varying the basis function weights more.
 
+## very_alt10yrs 
+
+Again using the `Dec_modulo` basis function so there is alternating emphasis nightly varying between north and south. Using a very altSched-like survey footprint and filter distribution.
+
+Also forcing y-band to be only executed in twilight time like alt-sched.
+
+## very_alt_rm510yrs 
+
+Same as `very_alt10yrs`, only now using the only the r-band 5-sigma depth maps for all filters except for u. This should let the bluer filters execute even in bright time. However, it looks like the requested number of z-band observations and the filter loading scheduler still force the z-band observations to be concentrated around full moon (thus preventing blue observations in bright time).
+
+## very_alt2
+
+Trying to do the altSched and get the z-band spread out more. Varying the limits on when u-band gets loaded, and decreasing the weight on staying in the same filter.
+

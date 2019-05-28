@@ -26,3 +26,6 @@ Turning up the number of g-band WFD observaions and turning down z and y.
 
 This results in lots of i-band being taken in twilght (this was already the case, but now even moreso). We migt consider only letting z and y in twilight?
 
+## stuck_rolling
+
+A test to see if we can pass the SRD requirement to have a median 825 visits in the WFD area, but skewing that distribution in such a way that it hurts some science cases. Indeed, in the WFD region the median number of visits is 1,716 (!), but the minimum is 240. Indeed, about half the WFD area only gets around 240 observations over all filters. 
