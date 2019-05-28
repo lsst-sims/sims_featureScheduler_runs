@@ -5,27 +5,41 @@ Results sporadically uploaded to: https://lsst-web.ncsa.illinois.edu/sim-data/si
 
 
 ## Experiments with results
-baselines: Tests varying number of exposures and pairs in different filters.
 
-twilight: Using twilight time as a seperate survey.
+DDF: Dithering strategies for the deep drilling fields. Also an attempt at the DESC DDF strategy.
 
-exp_time: Dynamically adjusting exposure times to maintain more uniform image depths.
-
-rolling_cadence: Variety of rolling cadence strategies.
-
-footprints: Trying different survey footprints and filter distributions
-
-DDF: Dithering strategies for the deep drilling fields. 
-
-cadence: Testing forcing things to perform a more specific cadence
+ToO: Testing using LSST to follow up on target of opportunity events
 
 alt_sched: Trying to drive specific cadence like alt-sched
 
-rotator: Scheduling the camera rotator angle
+baselines: Tests varying number of exposures and pairs in different filters.
 
-template_obs:  Making sure the full sky is covered in all filters in all years. Important for image differencing templates and ubercal. 
+cadence: Testing forcing things to perform a more specific cadence
 
 etc: Other random experiments, such as using azimuth distance rather than slewtime.
+
+exp_time: Dynamically adjusting exposure times to maintain more uniform image depths.
+
+filter_changer:  Experiment with changing when the 
+
+footprints: Trying different survey footprints and filter distributions
+
+rolling_cadence: Variety of rolling cadence strategies.
+
+rotator: Try varying the camera rotation angle
+
+short_expt: Include short exposure time all-sky surveys
+
+template_gen: Make sure the entire sky is covered each year of the survey
+
+twilight: Using twilight time as a seperate survey.
+
+vary_weights: A large parameter sweep varying the standard basis function weights
+
+
+## Planned Experiements
+
+LMC:  Including extra surveys of the LMC and SMC
 
 
 ## Other runs of interest
@@ -34,10 +48,4 @@ comCam: Example of scheduling with only comCam
 
 simple_examples: Simple examples, like single filter surveys
 
-## Planned Experiments
-
-stability_test:  Testing the stability of the scheduler to parameter settings and weather, etc
-
-ToO: Target of opportunity simulation
-
-
+stability_test: Vary the random number seed and survey start dates to check for stable behavior
