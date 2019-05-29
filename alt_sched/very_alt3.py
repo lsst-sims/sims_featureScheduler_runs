@@ -198,5 +198,5 @@ if __name__ == "__main__":
     blobs = generate_blobs(nside, nexp=nexp, rm5=rm5)
     surveys = [ddfs, blobs, greedy]
     run_sched(surveys, survey_length=survey_length, verbose=verbose,
-              fileroot=os.path.join(outDir, 'very_alt2'+extra_name+'illum%i_' % illum_limit), extra_info=extra_info,
+              fileroot=os.path.join(outDir, 'very_alt3'+extra_name+'illum%i_' % illum_limit), extra_info=extra_info,
               illum_limit=illum_limit)
