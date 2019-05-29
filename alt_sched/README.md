@@ -25,3 +25,7 @@ Same as `very_alt10yrs`, only now using the only the r-band 5-sigma depth maps f
 
 Trying to do the altSched and get the z-band spread out more. Varying the limits on when u-band gets loaded, and decreasing the weight on staying in the same filter.
 
+## very_alt3
+
+Like very_alt2, but with the weight on the 5-sigma depth basis function turned up (should shorten season lenth and increase cadence)
+

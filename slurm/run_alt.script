@@ -7,4 +7,10 @@ python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/ve
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 30 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 40 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 50 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 15 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 20 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 25 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 30 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 40 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 50 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
 
