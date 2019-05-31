@@ -46,7 +46,8 @@ def gen_greedy_surveys(nside, nexp=1):
 
     return surveys
 
-def generate_third(nside, nexp=1):
+
+def generate_third(nside, nexp=1, min_area=100.):
     """A survey to take a third observation in a night
     """
 
@@ -60,34 +61,34 @@ def generate_third(nside, nexp=1):
     to_pair = ['gi', 'rz']
 
     for pairs in to_pair:
-        bfs = []
-        bfs.append(bf.M5_diff_basis_function(filtername=pairs[0], nside=nside))
-        bfs.append(bf.M5_diff_basis_function(filtername=pairs[1], nside=nside))
+        for filtername in pairs:
+            bfs = []
+            bfs.append(bf.M5_diff_basis_function(filtername=filtername, nside=nside))
 
-        bfs.append(bf.Target_map_basis_function(filtername=pairs[0],
-                                                target_map=target_map[pairs[0]],
-                                                out_of_bounds_val=np.nan, nside=nside,
-                                                norm_factor=norm_factor))
-        bfs.append(bf.Target_map_basis_function(filtername=pairs[1],
-                                                target_map=target_map[pairs[1]],
-                                                out_of_bounds_val=np.nan, nside=nside,
-                                                norm_factor=norm_factor))
-        # Masks, give these 0 weight
-        bfs.append(bf.Zenith_shadow_mask_basis_function(nside=nside, shadow_minutes=60., max_alt=76.))
-        bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=30.))
-        bfs.append(bf.Clouded_out_basis_function())
-        filternames = [fn for fn in pairs]
-        bfs.append(bf.Filter_loaded_basis_function(filternames=filternames))
-        bfs.append(bf.Not_twilight_basis_function())
+            bfs.append(bf.Target_map_basis_function(filtername=filtername,
+                                                    target_map=target_map[pairs[0]],
+                                                    out_of_bounds_val=np.nan, nside=nside,
+                                                    norm_factor=norm_factor))
 
-        weights = [1., 1., 1., 1., 0, 0, 0, 0, 0]
+            bfs.append(bf.Third_observation_basis_function(filtername1=pairs[0], filtername2=pairs[1],
+                                                           gap_min=40., gap_max=120.))
 
-        
+            # Masks, give these 0 weight
+            bfs.append(bf.Zenith_shadow_mask_basis_function(nside=nside, shadow_minutes=60., max_alt=76.))
+            bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=30.))
+            bfs.append(bf.Clouded_out_basis_function())
+            filternames = [fn for fn in pairs]
+            bfs.append(bf.Filter_loaded_basis_function(filternames=filternames))
+            bfs.append(bf.Not_twilight_basis_function())
+
+            weights = [1., 1., 1., 0, 0, 0, 0, 0]
+
+            survey = Blob_survey(bfs, weights, filtername1=pairs[0], filtername2=None,
+                                 ignore_obs='DD', nexp=nexp,
+                                 nside=nside, min_area=min_area, survey_note='third, %s' % pairs[0])
+            surveys.append(survey)
 
     return surveys
-
-
-
 
 def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False):
     target_map = standard_goals(nside=nside)
@@ -202,12 +203,13 @@ if __name__ == "__main__":
     extra_info['git hash'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
     extra_info['file executed'] = os.path.realpath(__file__)
 
-
     greedy = gen_greedy_surveys(nside, nexp=nexp)
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
     blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
     if third:
         extra_name = 'third_'
+        third = generate_third(nside=nside)
+        surveys = [ddfs, third, blobs, greedy]
     else:
         surveys = [ddfs, blobs, greedy]
         extra_name = ''

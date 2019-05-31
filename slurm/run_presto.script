@@ -1,0 +1,2 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/presto/presto.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/presto
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/presto/presto.py --third --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/presto
