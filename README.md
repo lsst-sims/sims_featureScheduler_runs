@@ -24,6 +24,8 @@ filter_changer:  Experiment with changing when the
 
 footprints: Trying different survey footprints and filter distributions
 
+presto: The Presto-Color scheme, trying to get three observations per night.
+
 rolling_cadence: Variety of rolling cadence strategies.
 
 rotator: Try varying the camera rotation angle
