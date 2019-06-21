@@ -147,7 +147,7 @@ if __name__ == "__main__":
     outDir = args.outDir
     verbose = args.verbose
 
-    nside = 32
+    nside = 64
 
     extra_info = {}
     exec_command = ''
@@ -165,8 +165,7 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'baseline_%iexp_pairsmix_' % nexp), extra_info=extra_info,
-                      nside=nside)
+                      fileroot=os.path.join(outDir, 'highrez_%iexp_pairsmix_' % nexp), extra_info=extra_info, nside=nside)
         else:
             # Same filter for pairs
             greedy = gen_greedy_surveys(nside, nexp=nexp)
@@ -174,13 +173,11 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'baseline_%iexp_pairsame_' % nexp), extra_info=extra_info,
-                      nside=nside)
+                      fileroot=os.path.join(outDir, 'highrez_%iexp_pairsame_' % nexp), extra_info=extra_info, nside=nside)
     else:
         greedy = gen_greedy_surveys(nside, nexp=nexp)
         ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
         blobs = generate_blobs(nside, nexp=nexp, no_pairs=True)
         surveys = [ddfs, blobs, greedy]
         run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                  fileroot=os.path.join(outDir, 'baseline_%iexp_nopairs_' % nexp), extra_info=extra_info,
-                  nside=nside)
+                  fileroot=os.path.join(outDir, 'highrez_%iexp_nopairs_' % nexp), extra_info=extra_info, nside=nside)
