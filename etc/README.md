@@ -12,3 +12,28 @@ Looks like this results in a 2% drop in OSF. So, either things need to be re-wei
 ## highrez
 
 Try running at nside=64 to see what happens.
+
+
+Flushed 238 observations from queue for being stale
+Completed 2253981 observations
+ran in 606 min = 10.1 hours
+Writing results to  highrez_1exp_pairsmix_10yrs.db
+
+
+real    607m25.745s
+user    553m39.565s
+sys     4m3.097s
+
+so, 10.1 hours? 
+
+let's run the baseline to check that it's close but not identical:
+Flushed 230 observations from queue for being stale
+Completed 2254986 observations
+ran in 332 min = 5.5 hours
+Writing results to  baseline_1exp_pairsmix_10yrs.db
+
+real    333m22.858s
+user    281m20.097s
+sys     3m15.878s
+
+yup, baseline currently runs in 5.5 hours. 
