@@ -18,7 +18,7 @@
 
 ## Walltime (hours:min:sec) Do not specify a walltime substantially more than your job needs.
 
-#SBATCH --time=20:00:00
+#SBATCH --time=35:00:00
 
 ## Memory per node. It is important to specify the memory since the default memory is very small.
 
@@ -52,5 +52,6 @@ cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/slurm
 
 ## run all the baseline commands in parallel
 module load parallel-20170722
-## only need to do 5 at a time, since there are only that many in the list
-cat run_*.script | parallel -j 20
+## run it all
+#cat run_*.script | parallel -j 20
+cat run_combo.script | parallel -j 20
