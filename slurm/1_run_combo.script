@@ -1,0 +1,41 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt/short_expt.py --nshort 2 --short_time 1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt/short_expt.py --nshort 2 --short_time 5 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt/short_expt.py --nshort 5 --short_time 1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt/short_expt.py --nshort 5 --short_time 5 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/short_expt
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/dec_sched.py  --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt.py  --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt.py --rm5 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 15 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 20 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 25 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 30 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 40 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt2.py --illum_limit 50 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 15 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 20 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 25 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 30 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 40 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched/very_alt3.py --illum_limit 50 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/alt_sched
+
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name baseline --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name big_sky --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name gp_heavy --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name big_sky_nouiy --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name newA --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name newB --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name bluer_footprint --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name stuck_rolling --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 1.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 2.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 3.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 4.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen/templates.py --nexp 1 --template_weight 5.0 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/template_gen
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/twilight/onesec.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/twilight
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/presto/presto.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/presto
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/presto/presto.py --third --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/presto
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO/targetoo.py --too_rate 1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO/targetoo.py --too_rate 10 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO/targetoo.py --too_rate 50 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO/targetoo.py --too_rate 100 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/ToO
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --simple --splits 2 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
