@@ -36,11 +36,10 @@ def gen_greedy_surveys(nside, nexp=1):
         # Masks, give these 0 weight
         bfs.append(bf.Zenith_shadow_mask_basis_function(nside=nside, shadow_minutes=60., max_alt=76.))
         bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=40.))
-        bfs.append(bf.Clouded_out_basis_function())
 
         bfs.append(bf.Filter_loaded_basis_function(filternames=filtername))
 
-        weights = np.array([3.0, 0.3, 3., 3., 0., 0., 0., 0.])
+        weights = np.array([3.0, 0.3, 3., 3., 0., 0., 0.])
         surveys.append(Greedy_survey(bfs, weights, block_size=1, filtername=filtername,
                                      dither=True, nside=nside, ignore_obs='DD', nexp=nexp))
 
@@ -86,7 +85,6 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False):
         # Masks, give these 0 weight
         bfs.append(bf.Zenith_shadow_mask_basis_function(nside=nside, shadow_minutes=60., max_alt=76.))
         bfs.append(bf.Moon_avoidance_basis_function(nside=nside, moon_distance=30.))
-        bfs.append(bf.Clouded_out_basis_function())
         filternames = [fn for fn in [filtername, filtername2] if fn is not None]
         bfs.append(bf.Filter_loaded_basis_function(filternames=filternames))
         if filtername2 is None:
@@ -95,10 +93,10 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1, no_pairs=False):
             time_needed = times_needed[1]
         bfs.append(bf.Time_to_twilight_basis_function(time_needed=time_needed))
         bfs.append(bf.Not_twilight_basis_function())
-        weights = np.array([3.0, 3.0, .3, .3, 3., 3., 0., 0., 0., 0., 0., 0.])
+        weights = np.array([3.0, 3.0, .3, .3, 3., 3., 0., 0., 0., 0., 0.])
         if filtername2 is None:
             # Need to scale weights up so filter balancing still works properly.
-            weights = np.array([6.0, 0.6, 3., 3., 0., 0., 0., 0., 0., 0.])
+            weights = np.array([6.0, 0.6, 3., 3., 0., 0., 0., 0., 0.])
         if filtername2 is None:
             survey_name = 'blob, %s' % filtername
         else:

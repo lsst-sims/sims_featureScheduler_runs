@@ -1,0 +1,40 @@
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --simple --splits 3 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --simple --splits 5 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --simple --splits 10 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 2 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 3 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 6 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 2 --scale_down_factor 0.1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 3 --scale_down_factor 0.1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 6 --scale_down_factor 0.1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 2 --scale_down_factor 0.05 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 3 --scale_down_factor 0.05 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence/rolling.py --complex --splits 6 --scale_down_factor 0.05 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/dither_ddf.py --perNight --maxDither 0.7 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/dither_ddf.py --perNight --maxDither 0.23 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/dither_ddf.py --perObs --maxDither 0.7 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/dither_ddf.py --perObs --maxDither 0.23 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF/desc_ddf.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/DDF
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rotator/rotators.py --nexp 1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rotator
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 1.1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 0.9 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 0.8 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 0.7 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 0.6 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 0.4 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 0.3 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 0.2 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather/weather.py --cloud_limit 0.1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/weather
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/filter_changer/filter_changer.py --illum_limit 60  --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/filter_changer
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/filter_changer/filter_changer.py --illum_limit 30  --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/filter_changer
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/filter_changer/filter_changer.py --illum_limit 15  --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/filter_changer
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset -10 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 1 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 10 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 30 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 180 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 365 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 1 --seed 43 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test/stability.py --day_offset 1 --seed 44 --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/stability_test
+
