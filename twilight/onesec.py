@@ -113,7 +113,7 @@ def generate_blobs(nside, mixed_pairs=False, nexp=1):
     return surveys
 
 
-def run_sched(surveys, survey_length=365.25, nside=32, fileroot='fileroot', extra_info=None):
+def run_sched(surveys, survey_length=365.25, nside=32, fileroot='fileroot', extra_info=None, verbose=False):
     years = np.round(survey_length/365.25)
     scheduler = Core_scheduler(surveys, nside=nside)
     n_visit_limit = None
@@ -122,7 +122,7 @@ def run_sched(surveys, survey_length=365.25, nside=32, fileroot='fileroot', extr
                                                       survey_length=survey_length,
                                                       filename=fileroot+'%iyrs.db' % years,
                                                       delete_past=True, n_visit_limit=n_visit_limit,
-                                                      extra_info=extra_info)
+                                                      extra_info=extra_info, verbose=verbose)
 
 
 if __name__ == "__main__":
@@ -161,6 +161,6 @@ if __name__ == "__main__":
     ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
     blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=mixed_pairs)
     surveys = [ddfs, blobs, greedy]
-    run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, 'twilight_1s'), extra_info=extra_info)
-
+    run_sched(surveys, survey_length=survey_length, fileroot=os.path.join(outDir, 'twilight_1s'),
+              extra_info=extra_info, verbose=verbose)
 
