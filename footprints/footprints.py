@@ -5,6 +5,8 @@ from lsst.sims.featureScheduler.utils import generate_goal_map
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 from lsst.sims.featureScheduler.utils import standard_goals, calc_norm_factor
+import os
+from lsst.utils import getPackageDir
 
 
 # OK, what are the footprints we'd like to try?
@@ -106,6 +108,45 @@ def big_sky_nouiy(nside=32, weights={'u': [0.31, 0., False], 'g': [0.44, 0.15],
                                      'r': [1., 0.3], 'i': [1., 0.0, False], 'z': [0.9, 0.3],
                                      'y': [0.9, 0.0, False]}):
     result = big_sky(nside=nside, weights=weights)
+    return result
+
+
+def big_sky_dust(nside=32, weights={'u': [0.31, 0.15, False], 'g': [0.44, 0.15],
+                 'r': [1., 0.3], 'i': [1., 0.3], 'z': [0.9, 0.3],
+                 'y': [0.9, 0.3, False]}, dust_limit=0.19):
+    """
+    Based on the Olsen et al Cadence White Paper
+    """
+
+    ebvDataDir = getPackageDir('sims_maps')
+    filename = 'DustMaps/dust_nside_%i.npz' % nside
+    dustmap = np.load(os.path.join(ebvDataDir, filename))['ebvMap']
+
+    # wfd covers -72.25 < dec < 12.4. Avoid galactic plane |b| > 15 deg
+    wfd_north = np.radians(12.4)
+    wfd_south = np.radians(-72.25)
+    full_north = np.radians(30.)
+
+    ra, dec = utils.ra_dec_hp_map(nside=nside)
+    total_map = np.zeros(ra.size)
+
+    # let's make a first pass here
+
+    total_map[np.where(dec < full_north)] = 1e-6
+    total_map[np.where((dec > wfd_south) &
+                       (dec < wfd_north) &
+                       (dustmap < dust_limit))] = 1.
+
+    # Now let's break it down by filter
+    result = {}
+
+    for key in weights:
+        result[key] = total_map + 0.
+        result[key][np.where(result[key] == 1)] = weights[key][0]
+        result[key][np.where(result[key] == 1e-6)] = weights[key][1]
+        if len(weights[key]) == 3:
+            result[key][np.where(dec > wfd_north)] = 0.
+
     return result
 
 
