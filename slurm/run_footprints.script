@@ -6,3 +6,4 @@ python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/r
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name newB --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name bluer_footprint --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
 python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name stuck_rolling --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints/run_prints.py --nexp 1 --target_name big_sky_dust --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/footprints
