@@ -1,1 +1,10 @@
-python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off 0.
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off -0.2
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off -0.1
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off 0.1
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off 0.2
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off 0.3
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off 0.4
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off 0.5
+python /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time/exposure_times.py --outDir /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/exp_time --target_m5_off 0.6
+

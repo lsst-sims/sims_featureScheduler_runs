@@ -141,6 +141,7 @@ if __name__ == "__main__":
     parser.set_defaults(verbose=False)
     parser.add_argument("--survey_length", type=float, default=365.25*10)
     parser.add_argument("--outDir", type=str, default="")
+    parser.add_argument("--target_m5_off", type=float, default=0.)
 
     args = parser.parse_args()
     nexp = args.nexp
@@ -149,6 +150,7 @@ if __name__ == "__main__":
     survey_length = args.survey_length  # Days
     outDir = args.outDir
     verbose = args.verbose
+    target_m5_off = args.target_m5_off
 
     nside = 32
 
@@ -160,6 +162,21 @@ if __name__ == "__main__":
     extra_info['git hash'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
     extra_info['file executed'] = os.path.realpath(__file__)
 
+    target_m5 = {'g': 24.381615425253738,
+                 'i': 23.41810142458083,
+                 'r': 23.964359143049755,
+                 'u': 22.978794343692783,
+                 'y': 21.755612950787068,
+                 'z': 22.80377793629767}
+
+    for key in target_m5:
+        target_m5[key] += target_m5_off
+
+    if target_m5_off == 0:
+        extra_str = ''
+    else:
+        extra_str = 'm50_%.1f' % target_m5_off
+
     if Pairs:
         if mixedPairs:
             # mixed pairs.
@@ -168,7 +185,7 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp, mixed_pairs=True)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'exptime_%iexp_pairsmix_' % nexp), extra_info=extra_info)
+                      fileroot=os.path.join(outDir, 'exptime_%iexp_pairsmix_%s' % (nexp, target_m5_off)), extra_info=extra_info)
         else:
             # Same filter for pairs
             greedy = gen_greedy_surveys(nside, nexp=nexp)
@@ -176,11 +193,11 @@ if __name__ == "__main__":
             blobs = generate_blobs(nside, nexp=nexp)
             surveys = [ddfs, blobs, greedy]
             run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                      fileroot=os.path.join(outDir, 'exptime_%iexp_pairsame_' % nexp), extra_info=extra_info)
+                      fileroot=os.path.join(outDir, 'exptime_%iexp_pairsame_%s' % (nexp, target_m5_off)), extra_info=extra_info)
     else:
         greedy = gen_greedy_surveys(nside, nexp=nexp)
         ddfs = generate_dd_surveys(nside=nside, nexp=nexp)
         blobs = generate_blobs(nside, nexp=nexp, no_pairs=True)
         surveys = [ddfs, blobs, greedy]
         run_sched(surveys, survey_length=survey_length, verbose=verbose,
-                  fileroot=os.path.join(outDir, 'exptime_%iexp_nopairs_' % nexp), extra_info=extra_info)
+                  fileroot=os.path.join(outDir, 'exptime_%iexp_nopairs_%s' % (nexp, target_m5_off)), extra_info=extra_info)
