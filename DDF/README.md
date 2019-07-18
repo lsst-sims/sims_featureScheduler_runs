@@ -16,3 +16,7 @@ An initial attempt to try the DESC DDF strategy from Scolnic et al.
 * The survey length should be adjustable by changing the hour angle limits on the DDFs. Looks like the default hour angle limits for ELAISS1 are a little odd, not sure why they are what they are.
 * Dithering is included in the DDFs becuse I copy-pasta'd the code
 * Of note, the DDF sequences are much shorter now, so it might be harder to detect moving objects in DDF observations. 
+
+## euclid_ddf
+Adding in two DDF fields to overlap with Euclid, elminating the previous default #5 DDF.
+
