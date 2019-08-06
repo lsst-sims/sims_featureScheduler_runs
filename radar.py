@@ -9,7 +9,7 @@ import argparse
 
 if __name__ == "__main__":
     """
-    Run the radar batch on all .db files in a directory.
+    Run the radar batch on a file
     """
 
     parser = argparse.ArgumentParser()
