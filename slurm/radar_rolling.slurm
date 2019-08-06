@@ -48,9 +48,9 @@
 source /gscratch/astro/yoachim/lsst/loadLSST.bash
 setup sims_featureScheduler -t $USER 
 
-cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling
+cd /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/rolling_cadence
 
 ## run all the baseline commands in parallel
 module load parallel-20170722
 ## only need to do 
-cat /gscratch/astro/yoachim/git_repos/slurm/radar_rolling.script | parallel -j 10
+cat /gscratch/astro/yoachim/git_repos/sims_featureScheduler_runs/slurm/radar_rolling.script | parallel -j 10
